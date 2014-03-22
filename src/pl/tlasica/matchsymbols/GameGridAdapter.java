@@ -18,6 +18,7 @@ public class GameGridAdapter extends BaseAdapter {
     private Context         mContext;
     private Game            game;
     private GameController  controller;
+    private Button[]        items;
 
     private int[] colors = {Color.WHITE, Color.CYAN, Color.YELLOW, Color.BLUE, Color.GREEN};
 
@@ -26,6 +27,7 @@ public class GameGridAdapter extends BaseAdapter {
         mContext = c;
         game = gc.game();
         controller = gc;
+        items = new Button[game.numCols*game.numRows];
     }
 
     public int getCount() {
@@ -33,7 +35,7 @@ public class GameGridAdapter extends BaseAdapter {
     }
 
     public Object getItem(int position) {
-        return  null; //TODO
+        return items[position];
     }
 
     public long getItemId(int position) {
@@ -47,6 +49,7 @@ public class GameGridAdapter extends BaseAdapter {
             FontManager.setTypeface(button, Typeface.BOLD);
             button.setBackgroundResource(R.drawable.button);
             button.setTextColor(Color.WHITE);
+            items[position] = button;
         }
         else button = (Button)convertView;
 
@@ -86,7 +89,6 @@ public class GameGridAdapter extends BaseAdapter {
                 boolean selected = gameController.select(position);
                 if (selected) v.setBackgroundResource(R.drawable.button_selected);
             }
-            //v.setBackgroundResource(R.drawable.button_gray_pressed);
         }
     }
 

@@ -15,6 +15,20 @@ public class GameGenerator {
     int numColors;
     Random random = new Random(System.currentTimeMillis());
 
+    public static GameGenerator create(int level, int numColors) {
+        switch (level) {
+            case 1: return new GameGenerator(2, 2, 1, numColors);
+            case 2: return new GameGenerator(3, 2, 1, numColors);
+            case 3: return new GameGenerator(3, 3, 1, numColors);
+            case 4: return new GameGenerator(4, 3, 1, numColors);
+            case 5: return new GameGenerator(4, 4, 1, numColors);
+            case 6: return new GameGenerator(5, 4, 1, numColors);
+            case 7: return new GameGenerator(6, 4, 1, numColors);
+            case 8: return new GameGenerator(6, 4, 2, numColors);
+            default: return new GameGenerator(6, 4, 2, numColors);
+        }
+    }
+
     public GameGenerator(int r, int c, int p, int k) {
         numRows = r;
         numCols = c;
