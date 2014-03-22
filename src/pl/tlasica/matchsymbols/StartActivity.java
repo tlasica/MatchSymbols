@@ -8,6 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+//TODO add best personal results history and information
+//TODO start level should be a function of #points
+//TODO add some nice background
+//TODO add "share on FB" button
+//TODO add some comparison with people around the world?
+
 public class StartActivity extends Activity {
     /**
      * Called when the activity is first created.

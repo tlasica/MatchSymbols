@@ -22,6 +22,16 @@ import java.util.Observer;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+//TODO add playing some sounds after succ/failure
+//TODO description with nice font and large font
+//TODO big button EXIT (niebieski lub czerwony)
+//TODO show points gained so far (large)
+//TODO oddziele activity z wynikiem i przyciskiem play / menu / share
+//TODO reklama wyskakująca po zakończeniu / przed wynikami?
+//TODO lepsza ikonka (może taka 2x2)
+//TODO przerobić na symbolId i renderer (można by wówczas mieć np. rysunki)
+//TODO font powinien byc rozmiarowo lepszy albo i czcionka
+
 /**
  * Created by tomek on 22.03.14.
  */
