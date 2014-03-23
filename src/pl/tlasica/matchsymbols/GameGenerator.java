@@ -24,7 +24,7 @@ public class GameGenerator {
             case 5: return new GameGenerator(4, 4, 1, numColors);
             case 6: return new GameGenerator(5, 4, 1, numColors);
             case 7: return new GameGenerator(6, 4, 1, numColors);
-            case 8: return new GameGenerator(6, 4, 2, numColors);
+            case 8: return new GameGenerator(6, 5, 1, numColors);
             default: return new GameGenerator(6, 4, 2, numColors);
         }
     }

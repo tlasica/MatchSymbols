@@ -3,24 +3,22 @@ package pl.tlasica.matchsymbols;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 //TODO add playing some sounds after succ/failure
 //TODO description with nice font and large font
@@ -38,29 +36,49 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class GameActivity extends Activity implements Observer {
 
     private final int NUM_COLORS = 5;
-    private final int NUM_ROUNDS = 10;
+    private final int NUM_ROUNDS = 20;
+
+    private final int COLOR_RED = Color.parseColor("#FF4444");
+    private final int COLOR_GREEN = Color.parseColor("#99CC00");
 
     GridView        mSymbolsGrid;
+    TextView        mPointsText;
     Game            game;
     GameController  gameController;
     GameGridAdapter adapter;
     long            roundStartTimeMs;
-    int             level = 1;
+    int             level = 1;              // TODO: to be provided in the Intent
     List<GameResult>   history = new ArrayList<GameResult>();
     int             levelSuccesses = 0;
     int             numRounds = 0;
+    SoundPoolPlayer sounds;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // from http://zrgiu.com/blog/2011/01/making-your-android-app-look-better/
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.game_activity);
 
         // create grid view for symbols
         mSymbolsGrid = (GridView) findViewById(R.id.symbolsGrid);
+        mSymbolsGrid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+
+        // text view for points
+        mPointsText = (TextView) findViewById(R.id.tv_game_points);
+        FontManager.setMainFont(mPointsText, Typeface.NORMAL);
+
+        sounds = new SoundPoolPlayer(this);
 
         newGame(level);
+    }
+
+    @Override
+    protected void onDestroy() {
+        sounds.release();
+        super.onDestroy();
     }
 
     private void newGame(int level) {
@@ -76,8 +94,16 @@ public class GameActivity extends Activity implements Observer {
         // set adapater
         adapter = new GameGridAdapter(this, gameController);
         mSymbolsGrid.setAdapter( adapter );
+        // update points
+        updatePoints();
         // tick time
         roundStartTimeMs = System.currentTimeMillis();
+    }
+
+    private void updatePoints() {
+        long points = new PointsCalculator().getPoints(history);
+        String msg = getString(R.string.game_points) + " " + points;
+        mPointsText.setText( msg );
     }
 
     @Override
@@ -91,7 +117,9 @@ public class GameActivity extends Activity implements Observer {
             // calculate new level
             calculateNewLevel(success);
             // set background green/red
-            mSymbolsGrid.setBackgroundColor(success ? Color.GREEN : Color.RED);
+            mSymbolsGrid.setBackgroundColor(success ? COLOR_GREEN : COLOR_RED);
+            // play sound
+            if (success) sounds.playYes(); else sounds.playNo();
             // close activity after 300ms
             CountDownTimer timer = new CountDownTimer(300, 100) {
                 @Override
@@ -100,7 +128,8 @@ public class GameActivity extends Activity implements Observer {
 
                 @Override
                 public void onFinish() {
-                    mSymbolsGrid.setBackgroundColor(0);
+                    mSymbolsGrid.setBackgroundColor(Color.WHITE);
+                    //mSymbolsGrid.setBackground(mSymbolsGridBackground);
                     if (numRounds < NUM_ROUNDS) newGame(level);
                     else {
                         showResults();
@@ -112,7 +141,7 @@ public class GameActivity extends Activity implements Observer {
     }
 
     private void showResults() {
-        long points = new PointsCalculator().getPoints(history);
+        final long points = new PointsCalculator().getPoints(history);
         String msg = "You earned " + points + " points.\nCongratulations!";
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Game result")
@@ -121,6 +150,9 @@ public class GameActivity extends Activity implements Observer {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent ret = new Intent();
+                        ret.putExtra("POINTS", points);
+                        GameActivity.this.setResult(RESULT_OK, ret);
                         GameActivity.this.finish();
                     }
                 });
@@ -132,8 +164,8 @@ public class GameActivity extends Activity implements Observer {
     private void calculateNewLevel(boolean success) {
         if (success) {
             levelSuccesses++;
-            if (nextLevel()) {
-                ++level;
+            if (nextLevelReady()) {
+                level = nextLevel(level);
                 levelSuccesses=0;
             }
         }
@@ -147,15 +179,20 @@ public class GameActivity extends Activity implements Observer {
         history.add(h);
     }
 
-    private boolean nextLevel() {
+    private boolean nextLevelReady() {
         if (level==1 && levelSuccesses==2) return true;
-        if (level==2 && levelSuccesses==3) return true;
+        if (level==2 && levelSuccesses==2) return true;
         if (level==3 && levelSuccesses==3) return true;
-        if (level==4 && levelSuccesses==4) return true;
-        if (level==5 && levelSuccesses==4) return true;
-        if (level==6 && levelSuccesses==4) return true;
-        if (level==7 && levelSuccesses==4) return true;
-        if (level==8 && levelSuccesses==4) return true;
+        if (level==4 && levelSuccesses==3) return true;
+        if (level==5 && levelSuccesses==3) return true;
+        if (level==6 && levelSuccesses==3) return true;
+        if (level==7 && levelSuccesses==3) return true;
+        if (level==8 && levelSuccesses==3) return true;
         return false;
+    }
+
+    private int nextLevel(int level) {
+        if (level<7) return ++level;
+        else return 7;
     }
 }

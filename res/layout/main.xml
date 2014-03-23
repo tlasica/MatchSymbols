@@ -5,8 +5,17 @@
               android:layout_height="fill_parent"
               android:padding="5dp">
 
-    <Button
+    <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Match Symbols"
+            android:id="@+id/tv_start_apptitle"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#669900"
+            android:textSize="@android:dimen/app_icon_size"/>
+
+    <Button
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Start Game"
             android:id="@+id/buttonStart"
@@ -16,6 +25,31 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Personal best:"
+            android:id="@+id/tv_start_best_label"
+            android:layout_gravity="center_horizontal|bottom|left"
+            android:textColor="#0099cc"
+            android:textSize="24dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:singleLine="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{points}"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#0099cc"
+            android:textSize="@android:dimen/app_icon_size"
+            android:id="@+id/tv_start_best_points"/>
+
 </LinearLayout>
 

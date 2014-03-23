@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 
 /**
  * Created by tomek on 22.03.14.
@@ -20,7 +22,12 @@ public class GameGridAdapter extends BaseAdapter {
     private GameController  controller;
     private Button[]        items;
 
-    private int[] colors = {Color.WHITE, Color.CYAN, Color.YELLOW, Color.BLUE, Color.GREEN};
+    private int[] colors = {
+            Color.parseColor("#0099CC"),        // blue
+            Color.parseColor("#9933CC"),        // violet
+            Color.parseColor("#669900"),        // green
+            Color.parseColor("#FF8800"),        // orange
+            Color.parseColor("#CC0000") };      // red
 
 
     public GameGridAdapter(Context c, GameController gc) {
@@ -46,9 +53,11 @@ public class GameGridAdapter extends BaseAdapter {
         Button button;
         if (convertView == null) {
             button = new Button(mContext);
-            FontManager.setTypeface(button, Typeface.BOLD);
+            FontManager.setSymbolsFont(button, Typeface.BOLD);
             button.setBackgroundResource(R.drawable.button);
             button.setTextColor(Color.WHITE);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+            button.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, GridView.AUTO_FIT));
             items[position] = button;
         }
         else button = (Button)convertView;
