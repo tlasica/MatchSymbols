@@ -8,19 +8,41 @@
     <TextView
             android:id="@+id/tv_game_points"
             android:text="@string/game_points"
+            android:layout_alignParentTop="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textColor="#0099cc"
             android:textSize="16dp"/>
 
+    <TextView
+            android:id="@+id/tv_game_goal"
+            android:text="@string/game_goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="#9933cc"
+            android:textSize="16dp"
+            android:layout_below="@+id/tv_game_points"/>
+
+    <TextView
+            android:id="@+id/tv_game_round_points"
+            android:text="@string/game_round_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="#9933cc"
+            android:textSize="16dp"
+            android:layout_below="@+id/tv_game_goal"/>
+
     <GridView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/symbolsGrid"
+            android:layout_marginTop="10dp"
             android:layout_margin="5dp"
             android:padding="10dp"
-            android:layout_centerInParent="true"
+            android:layout_below="@id/tv_game_round_points"
             android:horizontalSpacing="3dp"
             android:verticalSpacing="3dp"
             android:clickable="true"

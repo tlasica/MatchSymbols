@@ -11,7 +11,7 @@ public class GameGenerator {
 
     int numRows;
     int numCols;
-    int numPairs;
+    int numIdentical;
     int numColors;
     Random random = new Random(System.currentTimeMillis());
 
@@ -32,18 +32,19 @@ public class GameGenerator {
     public GameGenerator(int r, int c, int p, int k) {
         numRows = r;
         numCols = c;
-        numPairs = p;
+        numIdentical = p;
         numColors = k;
     }
 
+    //TODO: algorytm generowania będzie do zmiany gdy zmieni się #ident
     public Game generate() {
-        Game game = new Game(numRows, numCols);
+        Game game = new Game(numRows, numCols, numIdentical);
         // generate unique symbols
-        int numSymbols = numRows * numCols - numPairs;
+        int numSymbols = numRows * numCols - numIdentical;
         List<Character> symbols = uniqueSymbols(numSymbols);
         // add pairs for random symbols
         Set<Integer> pairPos = new HashSet<Integer>();
-        while(pairPos.size()<numPairs) {
+        while(pairPos.size()<numIdentical) {
             int pos = random.nextInt(numSymbols);
             boolean isNewPos = pairPos.add(pos);
             if (isNewPos) {

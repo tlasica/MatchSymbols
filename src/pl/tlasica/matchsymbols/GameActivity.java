@@ -43,15 +43,21 @@ public class GameActivity extends Activity implements Observer {
 
     GridView        mSymbolsGrid;
     TextView        mPointsText;
+    TextView        mGoalText;
+    TextView        mPointsLeftText;
+
     Game            game;
     GameController  gameController;
     GameGridAdapter adapter;
     long            roundStartTimeMs;
-    int             level = 1;              // TODO: to be provided in the Intent
+    int             level = 2;              // TODO: to be provided in the Intent
     List<GameResult>   history = new ArrayList<GameResult>();
     int             levelSuccesses = 0;
     int             numRounds = 0;
     SoundPoolPlayer sounds;
+
+    PointsCalculator    pointsCalc = new PointsCalculator();
+    CountDownTimer  roundTimer = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +75,12 @@ public class GameActivity extends Activity implements Observer {
         // text view for points
         mPointsText = (TextView) findViewById(R.id.tv_game_points);
         FontManager.setMainFont(mPointsText, Typeface.NORMAL);
+
+        mGoalText = (TextView) findViewById(R.id.tv_game_goal);
+        FontManager.setMainFont(mGoalText, Typeface.NORMAL);
+
+        mPointsLeftText = (TextView) findViewById(R.id.tv_game_round_points);
+        FontManager.setMainFont(mPointsLeftText, Typeface.NORMAL);
 
         sounds = new SoundPoolPlayer(this);
 
@@ -98,6 +110,28 @@ public class GameActivity extends Activity implements Observer {
         updatePoints();
         // tick time
         roundStartTimeMs = System.currentTimeMillis();
+        roundTimer = startRoundTimer();
+    }
+
+    private CountDownTimer startRoundTimer() {
+        long roundDuration = pointsCalc.getLevelMaxDurationMs(level);
+        CountDownTimer timer = new CountDownTimer(roundDuration+200, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // update round points
+                long dur = System.currentTimeMillis() - roundStartTimeMs;
+                long pointsLeft = pointsCalc.pointsForDuration(level, dur);
+                String msg = getString(R.string.game_round_points) + String.valueOf(pointsLeft);
+                mPointsLeftText.setText(msg);
+            }
+
+            @Override
+            public void onFinish() {
+                // play some nice sound typu No...no TODO
+                // finish round as failure TODO
+            }
+        }.start();
+        return timer;
     }
 
     private void updatePoints() {
@@ -113,7 +147,8 @@ public class GameActivity extends Activity implements Observer {
             Log.d("GAME","game finished with success:"+success);
             // save in history
             saveRoundInHistory(success);
-            // play sound TODO
+            // stop round timer
+            roundTimer.cancel();
             // calculate new level
             calculateNewLevel(success);
             // set background green/red

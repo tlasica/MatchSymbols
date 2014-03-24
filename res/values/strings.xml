@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">MatchSymbols</string>
     <string name="gameActivityTitle">Play!</string>
-    <string name="game_goal">Find identical symbols as quick as possible!</string>
-    <string name="game_points">points:</string>
+    <string name="game_goal">Find 2 identical symbols</string>
+    <string name="game_points">Score:</string>
+    <string name="game_round_points">Time points:</string>
 </resources>

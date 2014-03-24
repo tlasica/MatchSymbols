@@ -11,15 +11,7 @@ public class PointsCalculator {
 
     public long getPoints(GameResult res) {
         if (res.success) {
-            long maxDur = getLevelMaxDurationMs(res.level);
-            long basicPoints = 10;
-            Log.d("POINTS", "dur:" + res.durationMs + " max:" + maxDur);
-            if (res.durationMs < maxDur) {
-                float ratio = (float)(maxDur-res.durationMs) / (float)maxDur;
-                basicPoints = (long) (100 * ratio);
-                Log.d("POINTS","basicPts:"+basicPoints);
-            }
-            return res.level * basicPoints;
+            return pointsForDuration(res.level, res.durationMs);
         }
         else return 0;
     }
@@ -33,8 +25,19 @@ public class PointsCalculator {
         return sum;
     }
 
+    public long pointsForDuration(int level, long durationMs) {
+        long maxDur = getLevelMaxDurationMs(level);
+        long basicPoints = 0;
+        if (durationMs <= maxDur) {
+            float ratio = (float)(maxDur-durationMs) / (float)maxDur;
+            basicPoints = (long) (100.0 * ratio);
+            return level * basicPoints;
+        }
+        else return 0;
+    }
 
-    private long getLevelMaxDurationMs(int level) {
+
+    public long getLevelMaxDurationMs(int level) {
         switch (level) {
             case 1: return 2000;
             case 2: return 4000;
