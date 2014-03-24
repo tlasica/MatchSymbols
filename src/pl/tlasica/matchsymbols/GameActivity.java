@@ -108,9 +108,16 @@ public class GameActivity extends Activity implements Observer {
         mSymbolsGrid.setAdapter( adapter );
         // update points
         updatePoints();
+        // update goal
+        updateGoal();
         // tick time
         roundStartTimeMs = System.currentTimeMillis();
         roundTimer = startRoundTimer();
+    }
+
+    private void updateGoal() {
+        String msg = getString(R.string.game_goal) + String.valueOf(game.numSame);
+        mGoalText.setText(msg);
     }
 
     private CountDownTimer startRoundTimer() {
@@ -149,12 +156,15 @@ public class GameActivity extends Activity implements Observer {
             saveRoundInHistory(success);
             // stop round timer
             roundTimer.cancel();
-            // calculate new level
-            calculateNewLevel(success);
             // set background green/red
             mSymbolsGrid.setBackgroundColor(success ? COLOR_GREEN : COLOR_RED);
             // play sound
-            if (success) sounds.playYes(); else sounds.playNo();
+            if (success) {
+                long dur = history.get(history.size()-1).durationMs;
+                if (pointsCalc.isVeryGoodResult(level, dur)) sounds.playYes();
+            } else sounds.playNo();
+            // calculate new level
+            calculateNewLevel(success);
             // close activity after 300ms
             CountDownTimer timer = new CountDownTimer(300, 100) {
                 @Override

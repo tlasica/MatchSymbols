@@ -52,4 +52,9 @@ public class PointsCalculator {
 
     }
 
+    public boolean isVeryGoodResult(int level, long dur) {
+        long max = getLevelMaxDurationMs(level);
+        float ratio = (float)dur / (float)max;
+        return ratio < 0.20;
+    }
 }

@@ -17,15 +17,15 @@ public class GameGenerator {
 
     public static GameGenerator create(int level, int numColors) {
         switch (level) {
-            case 1: return new GameGenerator(2, 2, 1, numColors);
-            case 2: return new GameGenerator(3, 2, 1, numColors);
-            case 3: return new GameGenerator(3, 3, 1, numColors);
-            case 4: return new GameGenerator(4, 3, 1, numColors);
-            case 5: return new GameGenerator(4, 4, 1, numColors);
-            case 6: return new GameGenerator(5, 4, 1, numColors);
-            case 7: return new GameGenerator(6, 4, 1, numColors);
-            case 8: return new GameGenerator(6, 5, 1, numColors);
-            default: return new GameGenerator(6, 4, 2, numColors);
+            case 1: return new GameGenerator(2, 2, 2, numColors);
+            case 2: return new GameGenerator(3, 2, 2, numColors);
+            case 3: return new GameGenerator(3, 3, 2, numColors);
+            case 4: return new GameGenerator(4, 3, 2, numColors);
+            case 5: return new GameGenerator(4, 4, 2, numColors);
+            case 6: return new GameGenerator(5, 4, 2, numColors);
+            case 7: return new GameGenerator(6, 4, 2, numColors);
+            case 8: return new GameGenerator(6, 5, 2, numColors);
+            default: return new GameGenerator(6, 4, 3, numColors);
         }
     }
 
@@ -40,7 +40,7 @@ public class GameGenerator {
     public Game generate() {
         Game game = new Game(numRows, numCols, numIdentical);
         // generate unique symbols
-        int numSymbols = numRows * numCols - numIdentical;
+        int numSymbols = numRows * numCols - (numIdentical-1);
         List<Character> symbols = uniqueSymbols(numSymbols);
         // add pairs for random symbols
         Set<Integer> pairPos = new HashSet<Integer>();
@@ -72,9 +72,6 @@ public class GameGenerator {
                 game.setColorIndex(r, c, color);
             }
         }
-        // TODO: set symbol colors
-
-
         return game;
     }
 

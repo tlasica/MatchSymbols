@@ -19,13 +19,13 @@ public class Game {
 
     int         numRows;
     int         numCols;
-    int         numSymbols;
+    int         numSame;
     Cell[][]    cells;
 
-    public Game(int rows, int cols, int numSymbols) {
+    public Game(int rows, int cols, int same) {
         numRows = rows;
         numCols = cols;
-        numSymbols = numSymbols;
+        numSame = same;
         cells = new Cell[rows][cols];
         for(int r=0; r<numRows; ++r)
             for(int c=0; c<numCols; ++c)
