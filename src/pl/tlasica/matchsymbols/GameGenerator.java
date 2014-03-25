@@ -40,35 +40,29 @@ public class GameGenerator {
     public Game generate() {
         Game game = new Game(numRows, numCols, numIdentical);
         // generate unique symbols
-        int numSymbols = numRows * numCols - (numIdentical-1);
-        List<Character> symbols = uniqueSymbols(numSymbols);
-        // add pairs for random symbols
-        Set<Integer> pairPos = new HashSet<Integer>();
-        while(pairPos.size()<numIdentical) {
-            int pos = random.nextInt(numSymbols);
-            boolean isNewPos = pairPos.add(pos);
-            if (isNewPos) {
-                symbols.add( symbols.get(pos));
-            }
+        int numUniqSymbols = numRows * numCols - (numIdentical-1);
+        List<Character> symbols = uniqueSymbols(numUniqSymbols);
+        // assign colors
+        Map<Character, Integer> symbolColors = new HashMap<Character, Integer>();
+        for(Character c: symbols) {
+            int color = random.nextInt(numColors);
+            symbolColors.put(c, color);
         }
-        assert symbols.size()==numSymbols;
+        // choose random symbol and add it to symbols so that numIdentical are present
+        int pos = random.nextInt(symbols.size());
+        Character original = symbols.get(pos);
+        List<Character> copies = Collections.nCopies(numIdentical-1, original);
+        symbols.addAll(copies);
+        assert symbols.size()==numRows * numCols;
         // shuffle list
         Collections.shuffle(symbols, random);
-        // random colors for each symbol
-        Map<Character, Integer> symbColors = new HashMap<Character, Integer>();
-        for(Character c: symbols) {
-            if (!symbColors.containsValue(c)) {
-                int color = random.nextInt(numColors);
-                symbColors.put(c, color);
-            }
-        }
         // set game symbols & colors
         for(int r=0; r<numRows; ++r) {
             for(int c=0; c<numCols; ++c) {
                 int idx = r * numCols + c;
                 char symb = symbols.get(idx);
                 game.setSymbol(r, c, symb);
-                int color = symbColors.get(symb);
+                int color = symbolColors.get(symb);
                 game.setColorIndex(r, c, color);
             }
         }
