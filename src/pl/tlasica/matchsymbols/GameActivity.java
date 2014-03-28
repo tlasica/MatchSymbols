@@ -194,9 +194,11 @@ public class GameActivity extends Activity implements Observer {
         // play sound
         long dur = history.get(history.size()-1).durationMs;
         if (level.goldReward(dur)) {
+            Log.d("GOLD REWARD", "level: "+level.levelNum);
             goldReward();
         }
         else if (level.silverReward(dur)) {
+            Log.d("SILVER REWARD", "level: "+level.levelNum);
             silverReward();
         }
         // after 300ms start new round
@@ -217,8 +219,7 @@ public class GameActivity extends Activity implements Observer {
         String msg = "Level " + level.levelNum + " SILVER reward!";
         int duration = Toast.LENGTH_SHORT;
         Toast.makeText(this, msg, duration).show();
-        //TODO: toast
-        //TODO: nice sound for silver reward
+        sounds.playYes();
     }
 
     private void goldReward() {
