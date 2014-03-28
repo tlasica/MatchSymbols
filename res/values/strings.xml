@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MatchSymbols</string>
+    <string name="app_name">S*Match</string>
     <string name="gameActivityTitle">Play!</string>
-    <string name="game_goal">Symbols to find: </string>
+    <string name="game_goal">Find %d identical symbols. Be quick!</string>
     <string name="game_points">Score:</string>
-    <string name="game_round_points">Time points: </string>
+    <string name="game_round_points">Time left: %d s</string>
+    <string name="subtitle">Visual Brain Training</string>
+    <string name="label_brain_index">You brain index:</string>
+    <string name="button_instruction">Instruction</string>
+    <string name="help">
+    Find identical symbols as quick as possible!
+    \n\n
+    The score depends on the time: the faster you find them, the more points you will get for the level.
+    \n\n
+    There is a time limit for each level.
+    A failure or timeout will finish game session.
+    \n\n
+    Your visual brain power index will be calculated from the score and level you reached.
+    \n\n
+    Good Luck!
+    </string>
 </resources>

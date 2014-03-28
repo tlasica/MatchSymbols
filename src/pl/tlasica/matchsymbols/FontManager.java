@@ -13,6 +13,7 @@ public class FontManager {
 
     private static Typeface fontNOZSTUDIO;
     private static Typeface fontLuckiestGuy;
+    private static Typeface fontRocko;
     private static Application app;
 
     public static void init(Application a) {
@@ -30,13 +31,31 @@ public class FontManager {
 
     public static void setMainFont(Button button, int style) {
         if (button!=null) {
-            button.setTypeface( getNOZSTUDIOFont(), style );
+            button.setTypeface( getRockoFont(), style );
         }
 
     }
 
     public static void setMainFont(TextView view, int style) {
+        view.setTypeface( getRockoFont(), style );
+    }
+
+    public static void setTitleFont(Button button, int style) {
+        if (button!=null) {
+            button.setTypeface( getNOZSTUDIOFont(), style );
+        }
+
+    }
+
+    public static void setTitleFont(TextView view, int style) {
         view.setTypeface( getNOZSTUDIOFont(), style );
+    }
+
+    private static Typeface getRockoFont() {
+        if (fontRocko==null) {
+            fontRocko = Typeface.createFromAsset(app.getAssets(),"fonts/RockoFLF.ttf");
+        }
+        return fontRocko;
     }
 
     private static Typeface getNOZSTUDIOFont() {

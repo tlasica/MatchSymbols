@@ -10,25 +10,23 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-//TODO add playing some sounds after succ/failure
 //TODO description with nice font and large font
 //TODO big button EXIT (niebieski lub czerwony)
-//TODO show points gained so far (large)
 //TODO oddziele activity z wynikiem i przyciskiem play / menu / share
 //TODO reklama wyskakująca po zakończeniu / przed wynikami?
-//TODO lepsza ikonka (może taka 2x2)
 //TODO przerobić na symbolId i renderer (można by wówczas mieć np. rysunki)
-//TODO font powinien byc rozmiarowo lepszy albo i czcionka
 
 /**
  * Created by tomek on 22.03.14.
@@ -44,19 +42,19 @@ public class GameActivity extends Activity implements Observer {
     GridView        mSymbolsGrid;
     TextView        mPointsText;
     TextView        mGoalText;
-    TextView        mPointsLeftText;
+    TextView        mTimeLeftText;
 
     Game            game;
     GameController  gameController;
     GameGridAdapter adapter;
     long            roundStartTimeMs;
-    int             level = 2;              // TODO: to be provided in the Intent
+    Level           level;
     List<GameResult>   history = new ArrayList<GameResult>();
     int             levelSuccesses = 0;
     int             numRounds = 0;
     SoundPoolPlayer sounds;
 
-    PointsCalculator    pointsCalc = new PointsCalculator();
+    PointsCalculator    pointsCalc;
     CountDownTimer  roundTimer = null;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -75,32 +73,38 @@ public class GameActivity extends Activity implements Observer {
         // text view for points
         mPointsText = (TextView) findViewById(R.id.tv_game_points);
         FontManager.setMainFont(mPointsText, Typeface.NORMAL);
+        mPointsText.setVisibility(View.GONE);
 
         mGoalText = (TextView) findViewById(R.id.tv_game_goal);
         FontManager.setMainFont(mGoalText, Typeface.NORMAL);
 
-        mPointsLeftText = (TextView) findViewById(R.id.tv_game_round_points);
-        FontManager.setMainFont(mPointsLeftText, Typeface.NORMAL);
+        mTimeLeftText = (TextView) findViewById(R.id.tv_game_round_points);
+        FontManager.setMainFont(mTimeLeftText, Typeface.NORMAL);
 
         sounds = new SoundPoolPlayer(this);
 
-        newGame(level);
+        int startLevel = getIntent().getIntExtra("LEVEL",1);
+        Log.d("GAME", "start level:" + startLevel);
+        newGame(startLevel);
     }
 
     @Override
     protected void onDestroy() {
+        roundTimer.cancel();
         sounds.release();
         super.onDestroy();
     }
 
-    private void newGame(int level) {
+    private void newGame(int aLevel) {
         numRounds++;
         // create game
-        GameGenerator generator = GameGenerator.create(level, NUM_COLORS);
+        level = Level.create(aLevel);
+        GameGenerator generator = GameGenerator.create(level.levelNum, NUM_COLORS);
         this.game = generator.generate();
         // and game controller
         this.gameController = new GameController(game);
         this.gameController.addObserver( this );
+        pointsCalc = new PointsCalculator(level);
         // set grid columns
         mSymbolsGrid.setNumColumns(game.numCols());
         // set adapater
@@ -116,33 +120,35 @@ public class GameActivity extends Activity implements Observer {
     }
 
     private void updateGoal() {
-        String msg = getString(R.string.game_goal) + String.valueOf(game.numSame);
+        String msg = String.format( getString(R.string.game_goal), game.numSame);
         mGoalText.setText(msg);
     }
 
     private CountDownTimer startRoundTimer() {
-        long roundDuration = pointsCalc.getLevelMaxDurationMs(level);
-        CountDownTimer timer = new CountDownTimer(roundDuration+200, 100) {
+        long roundDuration = level.durationMaxMs;
+        CountDownTimer timer = new CountDownTimer(roundDuration+100, 99) {
             @Override
             public void onTick(long millisUntilFinished) {
+                //TODO: play some sound if time < 5% and <5 sekund
                 // update round points
                 long dur = System.currentTimeMillis() - roundStartTimeMs;
-                long pointsLeft = pointsCalc.pointsForDuration(level, dur);
-                String msg = getString(R.string.game_round_points) + String.valueOf(pointsLeft);
-                mPointsLeftText.setText(msg);
+                long timeLeft = level.durationMaxMs - dur;
+                int secLeft = (int)((timeLeft) / 1000.0);
+                if (secLeft<0) secLeft = 0;
+                String msg = String.format( getString(R.string.game_round_points), secLeft);
+                mTimeLeftText.setText(msg);
             }
 
             @Override
             public void onFinish() {
-                // play some nice sound typu No...no TODO
-                // finish round as failure TODO
+                roundFailure();
             }
         }.start();
         return timer;
     }
 
     private void updatePoints() {
-        long points = new PointsCalculator().getPoints(history);
+        long points = pointsCalc.getPoints(history);
         String msg = getString(R.string.game_points) + " " + points;
         mPointsText.setText( msg );
     }
@@ -156,41 +162,98 @@ public class GameActivity extends Activity implements Observer {
             saveRoundInHistory(success);
             // stop round timer
             roundTimer.cancel();
-            // set background green/red
-            mSymbolsGrid.setBackgroundColor(success ? COLOR_GREEN : COLOR_RED);
-            // play sound
-            if (success) {
-                long dur = history.get(history.size()-1).durationMs;
-                if (pointsCalc.isVeryGoodResult(level, dur)) sounds.playYes();
-            } else sounds.playNo();
-            // calculate new level
-            calculateNewLevel(success);
-            // close activity after 300ms
-            CountDownTimer timer = new CountDownTimer(300, 100) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                }
 
-                @Override
-                public void onFinish() {
-                    mSymbolsGrid.setBackgroundColor(Color.WHITE);
-                    //mSymbolsGrid.setBackground(mSymbolsGridBackground);
-                    if (numRounds < NUM_ROUNDS) newGame(level);
-                    else {
-                        showResults();
-                    }
-                }
-            }.start();
-
+            if (success) roundSuccess();
+            else roundFailure();
         }
     }
 
-    private void showResults() {
-        final long points = new PointsCalculator().getPoints(history);
-        String msg = "You earned " + points + " points.\nCongratulations!";
+    private void roundFailure() {
+        // set background red
+        mSymbolsGrid.setBackgroundColor(COLOR_RED);
+        // play sound
+        sounds.vibrate();
+        if (this.gameController.isFinished()) sounds.playNo();
+        else sounds.playSnooring();
+        // after 300ms finish activity with results
+        CountDownTimer timer = new CountDownTimer(300, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                mSymbolsGrid.setBackgroundColor(Color.WHITE);
+                finishActivityWithResults();
+            }
+        }.start();
+    }
+
+    private void roundSuccess() {
+        // set background green
+        mSymbolsGrid.setBackgroundColor(COLOR_GREEN);
+        // play sound
+        long dur = history.get(history.size()-1).durationMs;
+        if (level.goldReward(dur)) {
+            goldReward();
+        }
+        else if (level.silverReward(dur)) {
+            silverReward();
+        }
+        // after 300ms start new round
+        CountDownTimer timer = new CountDownTimer(300, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                mSymbolsGrid.setBackgroundColor(Color.WHITE);
+                startNextLevel();
+            }
+        }.start();
+
+    }
+
+    private void silverReward() {
+        String msg = "Level " + level.levelNum + " SILVER reward!";
+        int duration = Toast.LENGTH_SHORT;
+        Toast.makeText(this, msg, duration).show();
+        //TODO: toast
+        //TODO: nice sound for silver reward
+    }
+
+    private void goldReward() {
+        String msg = "Level " + level.levelNum + " GOLD reward!";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, msg, duration);
+        toast.show();
+        sounds.playYes();
+    }
+
+    private void startNextLevel() {
+        int next = this.calculateNewLevel();
+        newGame(next);
+    }
+
+    private void finishActivityWithResults() {
+        final long points = pointsCalc.getPoints(history);
+        BrainIndex brainIndexCalc = new BrainIndex(getApplicationContext());
+        int idx = brainIndexCalc.calculate(history);
+        int change = brainIndexCalc.change(idx);
+        StringBuilder strb = new StringBuilder();
+        strb.append("Session results:\n");
+        strb.append("Score: ").append(points).append("\n");
+        if (change > 0) {
+            brainIndexCalc.store(idx);
+            strb.append("Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
+            strb.append("Brain Index Gain: +").append(change).append("\n");
+        }
+        else {
+            strb.append("Brain Index: ").append(brainIndexCalc.current()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
+        }
+        strb.append("\nCongratulations!");
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Game result")
-                .setMessage(msg)
+                .setMessage(strb.toString())
                 .setNeutralButton("Close", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -206,38 +269,30 @@ public class GameActivity extends Activity implements Observer {
 
     }
 
-    private void calculateNewLevel(boolean success) {
-        if (success) {
-            levelSuccesses++;
-            if (nextLevelReady()) {
-                level = nextLevel(level);
-                levelSuccesses=0;
-            }
+    private int calculateNewLevel() {
+        levelSuccesses++;
+        if (nextLevelReady()) {
+            levelSuccesses=0;
+            int next = level.next();
+            Log.d("NEXT", "next level:" + next);
+            return next;
+        }
+        else {
+            Log.d("NEXT", "level unchanged");
+            return level.levelNum;
         }
     }
 
     private void saveRoundInHistory(boolean success) {
         GameResult h = new GameResult();
         h.durationMs = System.currentTimeMillis() - roundStartTimeMs;
-        h.level = level;
+        h.level =level.levelNum;
         h.success = success;
         history.add(h);
     }
 
     private boolean nextLevelReady() {
-        if (level==1 && levelSuccesses==2) return true;
-        if (level==2 && levelSuccesses==2) return true;
-        if (level==3 && levelSuccesses==3) return true;
-        if (level==4 && levelSuccesses==3) return true;
-        if (level==5 && levelSuccesses==3) return true;
-        if (level==6 && levelSuccesses==3) return true;
-        if (level==7 && levelSuccesses==3) return true;
-        if (level==8 && levelSuccesses==3) return true;
-        return false;
+        return (levelSuccesses == 2);
     }
 
-    private int nextLevel(int level) {
-        if (level<7) return ++level;
-        else return 7;
-    }
 }

@@ -9,9 +9,15 @@ import java.util.List;
  */
 public class PointsCalculator {
 
+    private Level level;
+
+    public PointsCalculator(Level l) {
+        this.level = l;
+    }
+
     public long getPoints(GameResult res) {
         if (res.success) {
-            return pointsForDuration(res.level, res.durationMs);
+            return pointsForDuration(res.durationMs);
         }
         else return 0;
     }
@@ -25,36 +31,50 @@ public class PointsCalculator {
         return sum;
     }
 
-    public long pointsForDuration(int level, long durationMs) {
-        long maxDur = getLevelMaxDurationMs(level);
+    public long pointsForDuration(long durationMs) {
+        long maxDur = level.durationMaxMs;
         long basicPoints = 0;
         if (durationMs <= maxDur) {
             float ratio = (float)(maxDur-durationMs) / (float)maxDur;
             basicPoints = (long) (100.0 * ratio);
-            return level * basicPoints;
+            return (long)(levelWeight() * (float)basicPoints);
         }
         else return 0;
     }
 
-
-    public long getLevelMaxDurationMs(int level) {
-        switch (level) {
-            case 1: return 2000;
-            case 2: return 4000;
-            case 3: return 8000;
-            case 4: return 16000;
-            case 5: return 32000;
-            case 6: return 64000;
-            case 7: return 128000;
-            case 8: return 256000;
-            default: return 256000;
+    private double levelWeight() {
+        switch (level.levelNum) {
+            case 1: return 1;
+            case 2: return 1.2;
+            case 3: return 1.4;
+            case 4: return 2;
+            case 5: return 3;
+            case 6: return 5;
+            case 7: return 9;
+            case 8: return 10;
+            case 9: return 11;
+            case 10: return 12;
+            case 11: return 13;
+            case 12: return 14;
+            case 13: return 15;
+            case 14: return 15.5;
+            case 15: return 16;
+            case 16: return 16.5;
+            case 17: return 17;
+            case 18: return 18;
+            case 19: return 19;
+            case 20: return 20;
+            default: return 20;
         }
-
     }
 
-    public boolean isVeryGoodResult(int level, long dur) {
-        long max = getLevelMaxDurationMs(level);
-        float ratio = (float)dur / (float)max;
+    public long maxPointsPossible() {
+        return (long)(100 * levelWeight());
+    }
+
+    public boolean isVeryGoodResult(long dur) {
+        long maxDur = level.durationMaxMs;
+        float ratio = (float)dur / (float)maxDur;
         return ratio < 0.20;
     }
 }

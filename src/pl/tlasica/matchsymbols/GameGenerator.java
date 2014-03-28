@@ -16,24 +16,15 @@ public class GameGenerator {
     Random random = new Random(System.currentTimeMillis());
 
     public static GameGenerator create(int level, int numColors) {
-        switch (level) {
-            case 1: return new GameGenerator(2, 2, 2, numColors);
-            case 2: return new GameGenerator(3, 2, 2, numColors);
-            case 3: return new GameGenerator(3, 3, 2, numColors);
-            case 4: return new GameGenerator(4, 3, 2, numColors);
-            case 5: return new GameGenerator(4, 4, 2, numColors);
-            case 6: return new GameGenerator(5, 4, 2, numColors);
-            case 7: return new GameGenerator(6, 4, 2, numColors);
-            case 8: return new GameGenerator(6, 5, 2, numColors);
-            default: return new GameGenerator(6, 4, 3, numColors);
-        }
+        Level levelObj = Level.create(level);
+        return new GameGenerator(levelObj.gameDescr, numColors);
     }
 
-    public GameGenerator(int r, int c, int p, int k) {
-        numRows = r;
-        numCols = c;
-        numIdentical = p;
-        numColors = k;
+    public GameGenerator(GameDescriptor gameDescr, int colors) {
+        numRows = gameDescr.numRows;
+        numCols = gameDescr.numCols;
+        numIdentical = gameDescr.numSame;
+        numColors = colors;
     }
 
     //TODO: algorytm generowania będzie do zmiany gdy zmieni się #ident

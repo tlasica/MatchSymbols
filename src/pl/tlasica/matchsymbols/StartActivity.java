@@ -1,6 +1,8 @@
 package pl.tlasica.matchsymbols;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -11,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
@@ -22,7 +25,10 @@ public class StartActivity extends Activity {
 
     private static final int REQ_CODE = 111;
     PersonalBest        personalBest;
-    TextView            mTextPersonalBest;
+    TextView            mTextBrainIndex;
+    Settings            settings;
+    ToggleButton        mToggleSoundButton;
+    BrainIndex          brainIndex;
 
     /**
      * Called when the activity is first created.
@@ -39,44 +45,76 @@ public class StartActivity extends Activity {
         setContentView(R.layout.main);
 
         // set up fonts
-        Button btnStart = (Button) findViewById(R.id.buttonStart);
-        FontManager.setMainFont(btnStart, Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonAchievements), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonStart), Typeface.NORMAL);
 
-        TextView tv = (TextView) findViewById(R.id.tv_start_apptitle);
-        FontManager.setMainFont(tv, Typeface.NORMAL);
+        FontManager.setTitleFont((TextView) findViewById(R.id.tv_start_apptitle), Typeface.NORMAL);
+        FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
+        FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
 
-        tv = (TextView) findViewById(R.id.tv_start_best_label);
-        FontManager.setMainFont(tv, Typeface.NORMAL);
-
-        mTextPersonalBest = (TextView) findViewById(R.id.tv_start_best_points);
-        FontManager.setMainFont(mTextPersonalBest, Typeface.NORMAL);
-
+        brainIndex = new BrainIndex(getApplicationContext());
+        mTextBrainIndex = (TextView) findViewById(R.id.tv_start_brain_index);
         personalBest = new PersonalBest(getApplicationContext());
+        updateBrainIndex();
 
-        updatePersonalBest();
+        mToggleSoundButton = (ToggleButton) findViewById(R.id.toggleSoundButton);
+        settings = new Settings(getApplicationContext());
+        mToggleSoundButton.setChecked(settings.sound());
     }
 
-    private void updatePersonalBest() {
-        long best = personalBest.retrieve();
-        mTextPersonalBest.setText(String.valueOf(best));
+    private void updateBrainIndex() {
+        int index = brainIndex.current();
+        String msg = getString(R.string.label_brain_index) + (index>0?index:"?") + "/" + brainIndex.maxIndex();
+        mTextBrainIndex.setText(msg);
     }
 
     public void startGame(View view) {
         Log.d("START", "startGame()");
-
+        // calculate next level
+        int level = startLevelForBrainIndex();
         // start game activity
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("LEVEL", level);
         startActivityForResult(intent, REQ_CODE);
+    }
+
+    public void showInstruction(View view) {
+        String help = getString(R.string.help);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Game Instructions")
+                .setMessage(help)
+                .setNeutralButton("Close", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private int startLevelForBrainIndex() {
+        float r = (float)brainIndex.current() / (float)brainIndex.maxIndex();
+        int level = (int)(r * 10.0) - 3;
+        return (level>0) ? level : 1;
+
+    }
+
+    public void toggleSound(View view) {
+        boolean sound = settings.switchSound();
+        mToggleSoundButton.setChecked(sound);
+        Log.d("START", "toggleSound(), sound will be:" + sound);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE) {
 
             if(resultCode == RESULT_OK){
+                updateBrainIndex();
                 long points = data.getLongExtra("POINTS", 0);
                 if (personalBest.isNewBest(points)) {
                     personalBest.storeBest(points);
-                    updatePersonalBest();
                 }
             }
             if (resultCode == RESULT_CANCELED) {
