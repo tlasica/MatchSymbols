@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import com.heyzap.sdk.ads.HeyzapAds;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
@@ -36,6 +37,10 @@ public class StartActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Initialize HeyzApp
+        HeyzapAds.start(this);
+
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);

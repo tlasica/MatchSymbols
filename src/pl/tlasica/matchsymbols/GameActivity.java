@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.heyzap.sdk.ads.InterstitialAd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,6 +259,11 @@ public class GameActivity extends Activity implements Observer {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // show adds
+                        if (System.currentTimeMillis()%3==1) {
+                            InterstitialAd.display(GameActivity.this);
+                        }
+                        // finish activity
                         Intent ret = new Intent();
                         ret.putExtra("POINTS", points);
                         GameActivity.this.setResult(RESULT_OK, ret);
