@@ -64,7 +64,7 @@ public class GameGenerator {
         Set<Character> set = new HashSet<Character>(n);
         List<Character> symbols = new ArrayList<Character>();
         while(set.size()<n) {
-            Character c = randomSymbol();
+            Character c = (n<=26)? randomLetter() : randomAlphanumeric();
             if (set.add(c)) {
                 symbols.add(c);
             }
@@ -72,9 +72,15 @@ public class GameGenerator {
         return symbols;
     }
 
-    private char randomSymbol() {
+    private char randomLetter() {
         char c = (char)('A' + random.nextInt(26));
         return c;
+    }
+
+    private char randomAlphanumeric() {
+        int i = random.nextInt(26+10);
+        if (i<26) return (char)('A' + i);   // A..Z
+        else return (char)('0' + (i-26));   // 0..9
     }
 
 }

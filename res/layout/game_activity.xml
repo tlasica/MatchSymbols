@@ -6,37 +6,41 @@
                 android:padding="5dp">
 
     <TextView
-            android:id="@+id/tv_game_points"
-            android:text="@string/game_points"
-            android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textColor="#0099cc"
-            android:textSize="16dp"/>
-
-    <TextView
             android:id="@+id/tv_game_goal"
+            android:layout_alignParentTop="true"
             android:text="@string/game_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textColor="#CC0000"
             android:textSize="16dp"
-            android:layout_below="@+id/tv_game_points"
             />
 
-    <TextView
-            android:id="@+id/tv_game_round_points"
-            android:text="@string/game_round_points"
+        <TextView
+            android:id="@+id/tv_game_level"
+            android:text="{level}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="#FF4444"
+            android:textColor="#0099CC"
             android:textSize="16dp"
             android:layout_below="@+id/tv_game_goal"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="5dp"
             />
+        <TextView
+                android:id="@+id/tv_game_time_left"
+                android:text="{time left}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="10dp"
+                android:textColor="#FF4444"
+                android:textSize="16dp"
+                android:layout_below="@+id/tv_game_goal"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                />
 
     <GridView
             android:layout_width="wrap_content"
@@ -45,7 +49,7 @@
             android:layout_marginTop="10dp"
             android:layout_margin="5dp"
             android:padding="10dp"
-            android:layout_below="@id/tv_game_round_points"
+            android:layout_below="@id/tv_game_level"
             android:horizontalSpacing="3dp"
             android:verticalSpacing="3dp"
             android:clickable="true"

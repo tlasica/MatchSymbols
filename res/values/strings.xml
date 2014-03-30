@@ -19,5 +19,5 @@
     Your visual brain power index will be calculated from the score and level you reached.
     \n\n
     Good Luck!
-    </string>
+    </string><string name="game_level">Level: </string>
 </resources>

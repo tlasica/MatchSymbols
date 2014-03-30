@@ -96,7 +96,8 @@ public class StartActivity extends Activity {
 
     private int startLevelForBrainIndex() {
         float r = (float)brainIndex.current() / (float)brainIndex.maxIndex();
-        int level = (int)(r * 10.0) - 3;
+        int level = (int)(r * 10.0) - 2;
+        Log.d("START", "index:"+brainIndex.current() + "startlevel:" + level);
         return (level>0) ? level : 1;
 
     }

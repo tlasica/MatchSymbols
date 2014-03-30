@@ -40,9 +40,9 @@ public class GameActivity extends Activity implements Observer {
     private final int COLOR_GREEN = Color.parseColor("#99CC00");
 
     GridView        mSymbolsGrid;
-    TextView        mPointsText;
     TextView        mGoalText;
     TextView        mTimeLeftText;
+    TextView        mCurrLevelText;
 
     Game            game;
     GameController  gameController;
@@ -70,16 +70,14 @@ public class GameActivity extends Activity implements Observer {
         mSymbolsGrid = (GridView) findViewById(R.id.symbolsGrid);
         mSymbolsGrid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
 
-        // text view for points
-        mPointsText = (TextView) findViewById(R.id.tv_game_points);
-        FontManager.setMainFont(mPointsText, Typeface.NORMAL);
-        mPointsText.setVisibility(View.GONE);
-
         mGoalText = (TextView) findViewById(R.id.tv_game_goal);
         FontManager.setMainFont(mGoalText, Typeface.NORMAL);
 
-        mTimeLeftText = (TextView) findViewById(R.id.tv_game_round_points);
+        mTimeLeftText = (TextView) findViewById(R.id.tv_game_time_left);
         FontManager.setMainFont(mTimeLeftText, Typeface.NORMAL);
+
+        mCurrLevelText = (TextView) findViewById(R.id.tv_game_level);
+        FontManager.setMainFont(mCurrLevelText, Typeface.NORMAL);
 
         sounds = new SoundPoolPlayer(this);
 
@@ -110,8 +108,8 @@ public class GameActivity extends Activity implements Observer {
         // set adapater
         adapter = new GameGridAdapter(this, gameController);
         mSymbolsGrid.setAdapter( adapter );
-        // update points
-        updatePoints();
+        // update level
+        updateLevel();
         // update goal
         updateGoal();
         // tick time
@@ -147,11 +145,11 @@ public class GameActivity extends Activity implements Observer {
         return timer;
     }
 
-    private void updatePoints() {
-        long points = pointsCalc.getPoints(history);
-        String msg = getString(R.string.game_points) + " " + points;
-        mPointsText.setText( msg );
+    private void updateLevel() {
+        String msg = getString(R.string.game_level) + level.levelNum;
+        mCurrLevelText.setText( msg );
     }
+
 
     @Override
     public void update(Observable observable, Object data) {
@@ -241,15 +239,16 @@ public class GameActivity extends Activity implements Observer {
         int idx = brainIndexCalc.calculate(history);
         int change = brainIndexCalc.change(idx);
         StringBuilder strb = new StringBuilder();
-        strb.append("Session results:\n");
+        strb.append("Max Level: ").append(level.levelNum).append("\n");
         strb.append("Score: ").append(points).append("\n");
         if (change > 0) {
             brainIndexCalc.store(idx);
-            strb.append("Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
-            strb.append("Brain Index Gain: +").append(change).append("\n");
+            strb.append("Brain Index Gain: +").append(change).append("p\n");
+            strb.append("Current Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
         }
         else {
-            strb.append("Brain Index: ").append(brainIndexCalc.current()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
+            strb.append("Brain Index Gain: 0p").append("\n");
+            strb.append("Current Brain Index: ").append(brainIndexCalc.current()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
         }
         strb.append("\nCongratulations!");
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

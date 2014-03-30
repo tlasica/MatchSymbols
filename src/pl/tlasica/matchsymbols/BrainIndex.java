@@ -2,6 +2,7 @@ package pl.tlasica.matchsymbols;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.List;
 
@@ -53,8 +54,11 @@ public class BrainIndex {
             }
         }
         if (max>0) {
+            Log.d("BRAININDEX", "max score:" + max + " act score:" + sum + " maxLevel:" + maxLevelNum);
             double maxIndex = 976.0 * ((float)maxLevelNum / Level.MAX_LEVEL_NUM);
-            return (int)((sum/max) * maxIndex);
+            int index = (int)((sum/max) * maxIndex);
+            Log.d("BRAININDEX", "maxIndex:" + maxIndex + " index:" + index);
+            return index;
         }
         else return 0;
     }
