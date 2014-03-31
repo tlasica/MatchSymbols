@@ -42,7 +42,7 @@ public class PointsCalculator {
         else return 0;
     }
 
-    private double levelWeight() {
+    public double levelWeight() {
         switch (level.levelNum) {
             case 1: return 1;
             case 2: return 1.2;
@@ -72,9 +72,4 @@ public class PointsCalculator {
         return (long)(100 * levelWeight());
     }
 
-    public boolean isVeryGoodResult(long dur) {
-        long maxDur = level.durationMaxMs;
-        float ratio = (float)dur / (float)maxDur;
-        return ratio < 0.20;
-    }
 }

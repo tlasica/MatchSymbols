@@ -41,6 +41,8 @@ public class StartActivity extends Activity {
         //Initialize HeyzApp
         HeyzapAds.start(this);
 
+        // Initialize FB
+
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
