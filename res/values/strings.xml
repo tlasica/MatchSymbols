@@ -6,7 +6,7 @@
     <string name="game_points">Score:</string>
     <string name="game_round_points">Time left: %d s</string>
     <string name="subtitle">Visual Brain Training</string>
-    <string name="label_brain_index">You brain index:</string>
+    <string name="label_brain_index">Your brain power:</string>
     <string name="button_instruction">Instruction</string>
     <string name="help">
     Find identical symbols as quick as possible!
@@ -20,4 +20,7 @@
     \n\n
     Good Luck!
     </string><string name="game_level">Level: </string>
+    <string name="buttonShare">Share my result</string>
+    <string name="share_msg">Wow! My visual brain power is %d/1000 in S*Match android app. Check it!</string>
+    <string name="share_how">How do you want to share?</string>
 </resources>

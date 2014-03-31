@@ -243,13 +243,13 @@ public class GameActivity extends Activity implements Observer {
         strb.append("Max Level: ").append(level.levelNum).append("\n");
         strb.append("Score: ").append(points).append("\n");
         if (change > 0) {
-            brainIndexCalc.store(idx);
+            brainIndexCalc.storeIndex(idx);
             strb.append("Brain Index Gain: +").append(change).append("p\n");
             strb.append("Current Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
         }
         else {
             strb.append("Brain Index Gain: 0p").append("\n");
-            strb.append("Current Brain Index: ").append(brainIndexCalc.current()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
+            strb.append("Current Brain Index: ").append(brainIndexCalc.currentIndex()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
         }
         strb.append("\nCongratulations!");
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

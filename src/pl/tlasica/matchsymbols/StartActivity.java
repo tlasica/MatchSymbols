@@ -52,7 +52,7 @@ public class StartActivity extends Activity {
         setContentView(R.layout.main);
 
         // set up fonts
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonAchievements), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonShare), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonStart), Typeface.NORMAL);
 
@@ -71,7 +71,7 @@ public class StartActivity extends Activity {
     }
 
     private void updateBrainIndex() {
-        int index = brainIndex.current();
+        int index = brainIndex.currentIndex();
         String msg = getString(R.string.label_brain_index) + (index>0?index:"?") + "/" + brainIndex.maxIndex();
         mTextBrainIndex.setText(msg);
     }
@@ -101,12 +101,24 @@ public class StartActivity extends Activity {
         alert.show();
     }
 
-    private int startLevelForBrainIndex() {
-        float r = (float)brainIndex.current() / (float)brainIndex.maxIndex();
-        int level = (int)(r * 10.0) - 2;
-        Log.d("START", "index:"+brainIndex.current() + "startlevel:" + level);
-        return (level>0) ? level : 1;
+    public void share(View view) {
+        Log.d("START", "share()");
+        // building message
+        int index = brainIndex.currentIndex();
+        String msg = String.format(getString(R.string.share_msg), index);
+        // prepare intent
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "S*Match Brain Index");
+        intent.putExtra(Intent.EXTRA_TEXT, msg);
+        startActivity(Intent.createChooser(intent, getString(R.string.share_how)));
+    }
 
+    private int startLevelForBrainIndex() {
+        int maxSuccLevel = brainIndex.guesslevelFromIndex( brainIndex.currentIndex() );
+        int startLevel = maxSuccLevel - 6;
+        return (startLevel > 0) ? startLevel : 1;
     }
 
     public void toggleSound(View view) {

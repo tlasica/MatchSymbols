@@ -14,7 +14,7 @@ import java.util.List;
 public class BrainIndex {
 
     private static final int MAX_INDEX = 1000;
-    private String      KEY = "BrainIndex";
+    private String      KEY_IDX = "BrainIndex";
 
     private Context context;
 
@@ -26,18 +26,18 @@ public class BrainIndex {
         return MAX_INDEX;
     }
 
-    public int current() {
-        int r = preferences().getInt(KEY, 0);
+    public int currentIndex() {
+        int r = preferences().getInt(KEY_IDX, 0);
         return r;
     }
 
     public int change(int newIndex) {
-        return newIndex - current();
+        return newIndex - currentIndex();
     }
 
-    public void store(int newIndex) {
+    public void storeIndex(int newIndex) {
         SharedPreferences.Editor editor = preferences().edit();
-        editor.putInt(KEY, newIndex);
+        editor.putInt(KEY_IDX, newIndex);
         editor.commit();
     }
 
@@ -104,31 +104,14 @@ public class BrainIndex {
 
     }
 
-    /*
-    public int calculate2(List<GameResult> history) {
-        double max = 0;
-        double sum = 0;
-        int maxLevelNum = 0;
-        for(GameResult r: history) {
-            Level l = Level.create(r.level);
-            PointsCalculator calc = new PointsCalculator(l);
-            max += calc.maxPointsPossible();
-            if (r.success) {
-                maxLevelNum = r.level;
-                long score = calc.getPoints( r );
-                sum += score;
-            }
+    public int guesslevelFromIndex(int index) {
+        for(int i=0; i<=Level.MAX_LEVEL_NUM; i++) {
+            Pair<Integer, Integer> range = indexRange(i);
+            if (index>=range.first && index<range.second) return i;
         }
-        if (max>0) {
-            Log.d("BRAININDEX", "max score:" + max + " act score:" + sum + " maxLevel:" + maxLevelNum);
-            double maxIndex = 976.0 * ((float)maxLevelNum / Level.MAX_LEVEL_NUM);
-            int index = (int)((sum/max) * maxIndex);
-            Log.d("BRAININDEX", "maxIndex:" + maxIndex + " index:" + index);
-            return index;
-        }
-        else return 0;
+        return 0;
     }
-    */
+
 
     private SharedPreferences preferences() {
         return context.getSharedPreferences("pl.tlasica.matchsymbols", Context.MODE_PRIVATE);
