@@ -60,6 +60,11 @@ public class StartActivity extends Activity {
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
 
+        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_apptitle), 24);
+        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_subtitle), 16);
+        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_brain_index), 14);
+
+
         brainIndex = new BrainIndex(getApplicationContext());
         mTextBrainIndex = (TextView) findViewById(R.id.tv_start_brain_index);
         personalBest = new PersonalBest(getApplicationContext());

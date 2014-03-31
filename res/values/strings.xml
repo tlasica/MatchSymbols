@@ -6,7 +6,7 @@
     <string name="game_points">Score:</string>
     <string name="game_round_points">Time left: %d s</string>
     <string name="subtitle">Visual Brain Training</string>
-    <string name="label_brain_index">Your brain power:</string>
+    <string name="label_brain_index">Your brain power: </string>
     <string name="button_instruction">Instruction</string>
     <string name="help">
     Find identical symbols as quick as possible!

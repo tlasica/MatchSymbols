@@ -2,7 +2,6 @@ package pl.tlasica.matchsymbols;
 
 import android.app.Application;
 import android.graphics.Typeface;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -19,6 +18,10 @@ public class FontManager {
     public static void init(Application a) {
         app = a;
         getNOZSTUDIOFont();
+    }
+
+    public static void setSmartSize(TextView view, int size) {
+        view.setTextSize(size * app.getResources().getDisplayMetrics().density);
     }
 
     //TODO: change for better font

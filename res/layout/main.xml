@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
@@ -18,7 +19,7 @@
             android:id="@+id/tv_start_apptitle"
             android:layout_gravity="center_horizontal"
             android:textColor="#FF4444"
-            android:textSize="32sp"
+            android:textSize="32dp"
             android:singleLine="false"/>
 
     <TextView
@@ -26,20 +27,19 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_subtitle"
             android:singleLine="true"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:text="@string/subtitle"
             android:layout_gravity="center_horizontal"
             android:textIsSelectable="true"
             android:textColor="#CC0000"
-            android:textSize="24sp"/>
+            android:textSize="24dp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_brain_index"
             android:textColor="#0099cc"
-            android:textSize="24sp"
+            android:textSize="21dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:singleLine="false"
