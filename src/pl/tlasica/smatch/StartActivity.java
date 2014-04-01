@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.heyzap.sdk.ads.HeyzapAds;
+import com.swarmconnect.Swarm;
+import com.swarmconnect.SwarmActivity;
+import com.swarmconnect.SwarmLeaderboard;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
@@ -22,7 +25,7 @@ import com.heyzap.sdk.ads.HeyzapAds;
 //TODO add "share on FB" button
 //TODO add some comparison with people around the world?
 
-public class StartActivity extends Activity {
+public class StartActivity extends SwarmActivity {
 
     private static final int REQ_CODE = 111;
     PersonalBest        personalBest;
@@ -30,6 +33,8 @@ public class StartActivity extends Activity {
     Settings            settings;
     ToggleButton        mToggleSoundButton;
     BrainIndex          brainIndex;
+
+    final int   SWARM_LEADERBOARD_ID = 15332;
 
     /**
      * Called when the activity is first created.
@@ -41,12 +46,16 @@ public class StartActivity extends Activity {
         //Initialize HeyzApp
         HeyzapAds.start(this);
 
-        // Initialize FB
+        // Initialize Swarm
+        int SWARM_APP_ID = 10560;
+        String SWARM_APP_KEY = "ca4f8e194f72f503054e3a7381e0a557";
+
+        Swarm.init(this, SWARM_APP_ID, SWARM_APP_KEY);
+        Swarm.setAllowGuests(true);
 
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
@@ -55,6 +64,7 @@ public class StartActivity extends Activity {
         FontManager.setTitleFont((Button) findViewById(R.id.buttonShare), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonStart), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
 
         FontManager.setTitleFont((TextView) findViewById(R.id.tv_start_apptitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
@@ -106,6 +116,10 @@ public class StartActivity extends Activity {
         alert.show();
     }
 
+    public void showLeaderboard(View view) {
+        SwarmLeaderboard.showLeaderboard(SWARM_LEADERBOARD_ID);
+    }
+
     public void share(View view) {
         Log.d("START", "share()");
         // building message
@@ -136,10 +150,16 @@ public class StartActivity extends Activity {
         if (requestCode == REQ_CODE) {
 
             if(resultCode == RESULT_OK){
-                updateBrainIndex();
                 long points = data.getLongExtra("POINTS", 0);
                 if (personalBest.isNewBest(points)) {
                     personalBest.storeBest(points);
+                }
+                int brIndex = data.getIntExtra("BRAIN_INDEX", 0);
+                if (brIndex > brainIndex.currentIndex()) {
+                    Log.d("HURRA","hurra");
+                    brainIndex.storeIndex(brIndex);
+                    updateBrainIndex();
+                    SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brIndex);
                 }
             }
             if (resultCode == RESULT_CANCELED) {

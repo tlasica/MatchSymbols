@@ -5,6 +5,8 @@
       <configuration>
         <option name="PACK_TEST_CODE" value="true" />
         <option name="UPDATE_PROPERTY_FILES" value="true" />
+        <option name="ENABLE_MANIFEST_MERGING" value="true" />
+        <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
       </configuration>
     </facet>
   </component>
@@ -17,8 +19,17 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="SwarmConnect" />
     <orderEntry type="library" name="heyzap-ads-sdk" level="project" />
-    <orderEntry type="library" name="Swarm" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/app/SwarmConnect/library/libs/Swarm.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

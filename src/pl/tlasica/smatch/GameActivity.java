@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.heyzap.sdk.ads.InterstitialAd;
+import com.swarmconnect.SwarmActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +32,9 @@ import java.util.Observer;
 /**
  * Created by tomek on 22.03.14.
  */
-public class GameActivity extends Activity implements Observer {
+public class GameActivity extends SwarmActivity implements Observer {
 
     private final int NUM_COLORS = 5;
-    private final int NUM_ROUNDS = 20;
 
     private final int COLOR_RED = Color.parseColor("#FF4444");
     private final int COLOR_GREEN = Color.parseColor("#99CC00");
@@ -63,6 +63,7 @@ public class GameActivity extends Activity implements Observer {
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.game_activity);
 
@@ -236,13 +237,12 @@ public class GameActivity extends Activity implements Observer {
     private void finishActivityWithResults() {
         final long points = pointsCalc.getPoints(history);
         BrainIndex brainIndexCalc = new BrainIndex(getApplicationContext());
-        int idx = brainIndexCalc.calculate(history);
+        final int idx = brainIndexCalc.calculate(history);
         int change = brainIndexCalc.change(idx);
         StringBuilder strb = new StringBuilder();
         strb.append("Max Level: ").append(level.levelNum).append("\n");
         strb.append("Score: ").append(points).append("\n");
         if (change > 0) {
-            brainIndexCalc.storeIndex(idx);
             strb.append("Brain Index Gain: +").append(change).append("p\n");
             strb.append("Current Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
         }
@@ -265,6 +265,7 @@ public class GameActivity extends Activity implements Observer {
                         // finish activity
                         Intent ret = new Intent();
                         ret.putExtra("POINTS", points);
+                        ret.putExtra("BRAIN_INDEX", idx);
                         GameActivity.this.setResult(RESULT_OK, ret);
                         GameActivity.this.finish();
                     }

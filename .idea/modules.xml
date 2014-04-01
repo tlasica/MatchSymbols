@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MatchSymbols.iml" filepath="$PROJECT_DIR$/MatchSymbols.iml" />
+      <module fileurl="file://$USER_HOME$/app/SwarmConnect/library/SwarmConnect.iml" filepath="$USER_HOME$/app/SwarmConnect/library/SwarmConnect.iml" />
     </modules>
   </component>
 </project>

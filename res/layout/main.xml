@@ -63,6 +63,21 @@
             android:layout_marginLeft="20dp"/>
 
     <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonLeaderboard"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:onClick="showLeaderboard"
+            android:singleLine="true"
+            android:background="@drawable/button_green"
+            android:textColor="#ffffff"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/button_leaderboard"/>
+
+    <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_instruction"
