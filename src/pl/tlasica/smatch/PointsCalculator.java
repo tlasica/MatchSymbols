@@ -1,6 +1,4 @@
-package pl.tlasica.matchsymbols;
-
-import android.util.Log;
+package pl.tlasica.smatch;
 
 import java.util.List;
 

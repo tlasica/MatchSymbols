@@ -1,11 +1,10 @@
-package pl.tlasica.matchsymbols;
+package pl.tlasica.smatch;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -114,6 +113,6 @@ public class BrainIndex {
 
 
     private SharedPreferences preferences() {
-        return context.getSharedPreferences("pl.tlasica.matchsymbols", Context.MODE_PRIVATE);
+        return context.getSharedPreferences("pl.tlasica.smatch", Context.MODE_PRIVATE);
     }
 }

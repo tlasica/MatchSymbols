@@ -1,4 +1,4 @@
-package pl.tlasica.matchsymbols;
+package pl.tlasica.smatch;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -40,6 +40,6 @@ public class PersonalBest {
     }
 
     private SharedPreferences preferences() {
-        return context.getSharedPreferences("pl.tlasica.matchsymbols", Context.MODE_PRIVATE);
+        return context.getSharedPreferences("pl.tlasica.smatch", Context.MODE_PRIVATE);
     }
 }

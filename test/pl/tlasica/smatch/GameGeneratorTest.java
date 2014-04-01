@@ -1,4 +1,4 @@
-package pl.tlasica.matchsymbols;
+package pl.tlasica.smatch;
 
 import junit.framework.TestCase;
 
