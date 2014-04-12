@@ -181,7 +181,7 @@ public class GameActivity extends SwarmActivity implements Observer {
 
             @Override
             public void onFinish() {
-                mSymbolsGrid.setBackgroundColor(Color.WHITE);
+                mSymbolsGrid.setBackgroundColor(Color.BLACK);
                 finishActivityWithResults();
             }
         }.start();
@@ -207,7 +207,7 @@ public class GameActivity extends SwarmActivity implements Observer {
 
             @Override
             public void onFinish() {
-                mSymbolsGrid.setBackgroundColor(Color.WHITE);
+                mSymbolsGrid.setBackgroundColor(Color.BLACK);
                 startNextLevel();
             }
         }.start();
@@ -254,6 +254,7 @@ public class GameActivity extends SwarmActivity implements Observer {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Game result")
                 .setMessage(strb.toString())
+                .setCancelable(false)
                 .setNeutralButton("Close", new DialogInterface.OnClickListener()
                 {
                     @Override
