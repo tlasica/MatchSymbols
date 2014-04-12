@@ -18,7 +18,7 @@
             android:text="S*Match"
             android:id="@+id/tv_start_apptitle"
             android:layout_gravity="center_horizontal"
-            android:textColor="#FF4444"
+            android:textColor="#FF8800"
             android:textSize="32dp"
             android:singleLine="false"/>
 
@@ -31,7 +31,7 @@
             android:text="@string/subtitle"
             android:layout_gravity="center_horizontal"
             android:textIsSelectable="true"
-            android:textColor="#CC0000"
+            android:textColor="#FFBB33"
             android:textSize="24dp"/>
 
     <TextView

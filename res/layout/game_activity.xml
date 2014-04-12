@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="#CC0000"
+            android:textColor="#FFBB33"
             android:textSize="16dp"
             />
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="#0099CC"
+            android:textColor="#33B5E5"
             android:textSize="16dp"
             android:layout_below="@+id/tv_game_goal"
             android:layout_alignParentLeft="true"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginRight="10dp"
-                android:textColor="#FF4444"
+                android:textColor="#FF8800"
                 android:textSize="16dp"
                 android:layout_below="@+id/tv_game_goal"
                 android:layout_alignParentRight="true"

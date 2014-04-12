@@ -32,9 +32,9 @@ public class Level {
             case 15: return new Level(15, new GameDescriptor(6,5,2), 12000, 1600, 3000);
             case 16: return new Level(16, new GameDescriptor(6,5,2), 11000, 1600, 3000);
             case 17: return new Level(17, new GameDescriptor(6,5,2), 10000, 1600, 3000);
-            case 18: return new Level(18, new GameDescriptor(6,5,2), 9000, 1600, 3000);
+            case 18: return new Level(18, new GameDescriptor(6,5,2), 9500, 1600, 3000);
             case 19: return new Level(19, new GameDescriptor(6,5,2), 8000, 1600, 3000);
-            case 20: return new Level(20, new GameDescriptor(6,5,2), 6000, 1600, 3000);
+            case 20: return new Level(20, new GameDescriptor(6,5,2), 8500, 1600, 3000);
             default: return create(20);
         }
     }
