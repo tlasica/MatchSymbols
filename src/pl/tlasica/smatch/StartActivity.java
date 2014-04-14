@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.heyzap.sdk.ads.HeyzapAds;
 import com.swarmconnect.Swarm;
 import com.swarmconnect.SwarmActivity;
 import com.swarmconnect.SwarmLeaderboard;
+
+import java.util.List;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
@@ -121,10 +124,13 @@ public class StartActivity extends SwarmActivity {
     }
 
     public void share(View view) {
+
         Log.d("START", "share()");
         // building message
         int index = brainIndex.currentIndex();
         String msg = String.format(getString(R.string.share_msg), index);
+        String url = "http://bit.ly/1ibDjjJ";
+        msg = msg + " " + url;
         // prepare intent
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -132,6 +138,21 @@ public class StartActivity extends SwarmActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "S*Match Brain Index");
         intent.putExtra(Intent.EXTRA_TEXT, msg);
         startActivity(Intent.createChooser(intent, getString(R.string.share_how)));
+    }
+
+    public void shareOnFacebook(View view) {
+        String url = "http://bit.ly/1ibDjjJ";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+        List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo info : matches) {
+            if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook")) {
+                intent.setPackage(info.activityInfo.packageName);
+                break;
+            }
+        }
+        if (intent.getPackage() != null) startActivity(intent);
     }
 
     private int startLevelForBrainIndex() {
