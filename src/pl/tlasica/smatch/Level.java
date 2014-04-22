@@ -47,10 +47,6 @@ public class Level {
         durationSilverMs = durSilver;
     }
 
-    public boolean maxDurationExceeded(long durMs) {
-        return (durMs>durationMaxMs);
-    }
-
     public boolean goldReward(long durMs) {
         return (durMs<=durationGoldMs);
     }

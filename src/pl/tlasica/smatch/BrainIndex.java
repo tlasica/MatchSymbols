@@ -42,10 +42,9 @@ public class BrainIndex {
 
     public int calculate(List<GameResult> history) {
         if (history.size()<=1) return 0;
-        // get maximum finished level (assuming that last result is unsuccessfull)
+        // get maximum finished level (assuming that last result is a failure)
         int maxSuccLevel = history.get(history.size()-1).level-1;
         // for up to 4 maximum successfull rounds calculate %time
-        int count = 4;
         int start = history.size()-5;
         int end = history.size()-2;
         if (start<0) start = 0;
@@ -59,8 +58,8 @@ public class BrainIndex {
                 PointsCalculator calc = new PointsCalculator(l);
                 double maxDur = (l.durationMaxMs - l.durationGoldMs);
                 double actDur = res.durationMs;
-                double percent = actDur / maxDur;
-                if (percent>100.0) percent = 100.0;
+                double percent = 1.0 - actDur / maxDur;
+                if (percent<0.0) percent = 0.0;
                 double weight = calc.levelWeight();
                 sumWeight += weight;
                 sumPoints += percent * weight;
@@ -68,7 +67,7 @@ public class BrainIndex {
         }
         // calculate total
         Pair<Integer, Integer> range = indexRange(maxSuccLevel);
-        double timePoints = (sumPoints/sumWeight) * (range.second-range.second);
+        double timePoints = (sumPoints/sumWeight) * (range.second-range.first);
         int base = range.first;
 
         Log.d("BRAININDEX", "maxsucclevel: " + maxSuccLevel + "base:" + base + " timepts:" + timePoints);

@@ -27,19 +27,19 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_subtitle"
             android:singleLine="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:text="@string/subtitle"
             android:layout_gravity="center_horizontal"
             android:textIsSelectable="true"
             android:textColor="#FFBB33"
-            android:textSize="24dp"/>
+            android:textSize="20dp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_brain_index"
             android:textColor="#33B5E5"
-            android:textSize="21dp"
+            android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:singleLine="false"
@@ -50,29 +50,61 @@
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Start Game"
-            android:id="@+id/buttonStart"
+            android:text="@string/button_continue"
+            android:id="@+id/buttonContinue"
             android:layout_gravity="center"
             android:clickable="true"
-            android:onClick="startGame"
+            android:onClick="continueGame"
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
-            android:layout_marginTop="20dp"
+            android:padding="5dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"/>
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_NewGame"
+            android:padding="5dp"
+            android:id="@+id/buttonNewGame"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:onClick="startNewGame"
+            android:singleLine="true"
+            android:background="@drawable/button_green"
+            android:textColor="#ffffff"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"/>
 
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:clickable="true"
+            android:onClick="onInitSwarm"
+            android:singleLine="true"
+            android:background="@drawable/button_green"
+            android:textColor="#ffffff"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/button_initswarm"
+            android:id="@+id/buttonSwarm"/>
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/buttonLeaderboard"
-            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
             android:clickable="true"
             android:onClick="showLeaderboard"
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:text="@string/button_leaderboard"/>
@@ -81,6 +113,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_instruction"
+            android:padding="5dp"
             android:id="@+id/buttonInstruction"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
@@ -88,7 +121,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 
@@ -96,13 +129,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/buttonShare"
+            android:padding="5dp"
             android:id="@+id/buttonShare"
             android:clickable="true"
             android:onClick="share"
             android:singleLine="true"
             android:background="@drawable/button_blue"
             android:textColor="#ffffff"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 

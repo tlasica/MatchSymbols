@@ -37,7 +37,9 @@ public class StartActivity extends SwarmActivity {
     ToggleButton        mToggleSoundButton;
     BrainIndex          brainIndex;
 
-    final int   SWARM_LEADERBOARD_ID = 15332;
+    final int       SWARM_LEADERBOARD_ID = 15332;
+    final int       SWARM_APP_ID = 10560;
+    final String    SWARM_APP_KEY = "ca4f8e194f72f503054e3a7381e0a557";
 
     /**
      * Called when the activity is first created.
@@ -49,12 +51,8 @@ public class StartActivity extends SwarmActivity {
         //Initialize HeyzApp
         HeyzapAds.start(this);
 
-        // Initialize Swarm
-        int SWARM_APP_ID = 10560;
-        String SWARM_APP_KEY = "ca4f8e194f72f503054e3a7381e0a557";
-
-        Swarm.init(this, SWARM_APP_ID, SWARM_APP_KEY);
-        Swarm.setAllowGuests(true);
+        // Initialize Swarm if enabled
+        if (Swarm.isEnabled()) initSwarm();
 
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
@@ -66,16 +64,14 @@ public class StartActivity extends SwarmActivity {
         // set up fonts
         FontManager.setTitleFont((Button) findViewById(R.id.buttonShare), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonStart), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonContinue), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
+        FontManager.setTitleFont((Button) findViewById(R.id.buttonSwarm), Typeface.NORMAL);
 
         FontManager.setTitleFont((TextView) findViewById(R.id.tv_start_apptitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
-
-        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_apptitle), 24);
-        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_subtitle), 16);
-        //FontManager.setSmartSize((TextView) findViewById(R.id.tv_start_brain_index), 14);
 
 
         brainIndex = new BrainIndex(getApplicationContext());
@@ -88,13 +84,64 @@ public class StartActivity extends SwarmActivity {
         mToggleSoundButton.setChecked(settings.sound());
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateSwarmUI();
+        // show/hide continue button
+        Button btn = (Button) findViewById(R.id.buttonContinue);
+        int nextLevel = startLevelForBrainIndex();
+        if (nextLevel>1) {
+            btn.setVisibility(View.VISIBLE);
+            String text = String.format(getString(R.string.button_continue), nextLevel);
+            btn.setText(text);
+        }
+        else {
+            btn.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateSwarmUI() {
+        Button btnInit = (Button) findViewById(R.id.buttonSwarm);
+        Button btnBoard = (Button) findViewById(R.id.buttonLeaderboard);
+        // init button hidden if swat enabled
+        // TODO: na razie go całkowicie ukrywamy, bo jest przy komicie wynikow
+        btnInit.setVisibility(View.GONE);
+        //if (Swarm.isEnabled()) btnInit.setVisibility(View.GONE);
+        //else btnInit.setVisibility(View.VISIBLE);
+        // leaderboard allowed if swarm initialized and enabled
+        if (Swarm.isEnabled() && Swarm.isInitialized()) btnBoard.setVisibility(View.VISIBLE);
+        else btnBoard.setVisibility(View.GONE);
+    }
+
     private void updateBrainIndex() {
         int index = brainIndex.currentIndex();
-        String msg = getString(R.string.label_brain_index) + (index>0?index:"?") + "/" + brainIndex.maxIndex();
+        String msg = getString(R.string.label_brain_index) + " " + (index>0?index:"?") + "/" + brainIndex.maxIndex();
         mTextBrainIndex.setText(msg);
     }
 
-    public void startGame(View view) {
+    private void initSwarm() {
+        Log.d("SWARM", "initSwarm()");
+        Swarm.init(this, SWARM_APP_ID, SWARM_APP_KEY);
+        Swarm.setAllowGuests(true);
+    }
+
+    public void onInitSwarm(View view) {
+        initSwarm();
+    }
+
+    public void startNewGame(View view) {
+        Log.d("START", "startGame()");
+        // calculate next level
+        int level = 1;
+        // start game activity
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("LEVEL", level);
+        startActivityForResult(intent, REQ_CODE);
+    }
+
+    public void continueGame(View view) {
         Log.d("START", "startGame()");
         // calculate next level
         int level = startLevelForBrainIndex();
@@ -157,7 +204,7 @@ public class StartActivity extends SwarmActivity {
 
     private int startLevelForBrainIndex() {
         int maxSuccLevel = brainIndex.guesslevelFromIndex( brainIndex.currentIndex() );
-        int startLevel = maxSuccLevel - 6;
+        int startLevel = maxSuccLevel - 4;
         return (startLevel > 0) ? startLevel : 1;
     }
 
@@ -180,6 +227,7 @@ public class StartActivity extends SwarmActivity {
                     Log.d("HURRA","hurra");
                     brainIndex.storeIndex(brIndex);
                     updateBrainIndex();
+                    //TODO: można tutaj sprawdzać if (Swarm.isEnabled()) ale tak jest ok.
                     SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brIndex);
                 }
             }

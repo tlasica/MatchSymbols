@@ -22,5 +22,9 @@
     </string><string name="game_level">Level: </string>
     <string name="buttonShare">Share my result</string>
     <string name="share_msg">Wow! My visual brain power is %d/1000 in S*Match android app. Check it!</string>
-    <string name="share_how">How do you want to share?</string><string name="button_leaderboard">Show Leaderboard</string>
+    <string name="share_how">How do you want to share?</string>
+    <string name="button_leaderboard">Leaderboard</string>
+    <string name="button_initswarm">Join Community</string>
+    <string name="button_NewGame">Play Level 1</string>
+    <string name="button_continue">Play Level %d</string>
 </resources>
