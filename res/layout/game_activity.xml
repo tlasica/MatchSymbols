@@ -54,4 +54,37 @@
             android:verticalSpacing="3dp"
             android:clickable="true"
             android:stackFromBottom="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_game_result"
+            android:singleLine="false"
+            android:layout_marginTop="6dp"
+            android:text="@string/game_result"
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="true"
+            android:textColor="#FFBB33"
+            android:textSize="20dp"
+            android:layout_above="@+id/buttonGameOver"/>
+
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/button_game_over"
+            android:id="@+id/buttonGameOver"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:onClick="onGameOver"
+            android:singleLine="true"
+            android:background="@drawable/button_green"
+            android:textColor="#ffffff"
+            android:padding="5dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

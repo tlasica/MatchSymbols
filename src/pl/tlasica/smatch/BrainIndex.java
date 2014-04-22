@@ -21,7 +21,7 @@ public class BrainIndex {
         context = ctx;
     }
 
-    public int maxIndex() {
+    public static int maxIndex() {
         return MAX_INDEX;
     }
 

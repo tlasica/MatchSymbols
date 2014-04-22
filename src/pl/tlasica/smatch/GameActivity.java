@@ -1,8 +1,5 @@
 package pl.tlasica.smatch;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -10,8 +7,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +42,8 @@ public class GameActivity extends SwarmActivity implements Observer {
     TextView        mGoalText;
     TextView        mTimeLeftText;
     TextView        mCurrLevelText;
+    Button          buttonGameOver;
+    TextView        mResultText;
 
     Game            game;
     GameController  gameController;
@@ -80,6 +81,14 @@ public class GameActivity extends SwarmActivity implements Observer {
         mCurrLevelText = (TextView) findViewById(R.id.tv_game_level);
         FontManager.setMainFont(mCurrLevelText, Typeface.NORMAL);
 
+        buttonGameOver = (Button) findViewById(R.id.buttonGameOver);
+        FontManager.setMainFont(buttonGameOver, Typeface.NORMAL);
+        buttonGameOver.setVisibility(View.GONE);
+
+        mResultText = (TextView) findViewById(R.id.tv_game_result);
+        FontManager.setMainFont(mResultText, Typeface.NORMAL);
+        mResultText.setVisibility(View.GONE);
+
         sounds = new SoundPoolPlayer(this);
 
         int startLevel = getIntent().getIntExtra("LEVEL",1);
@@ -92,6 +101,13 @@ public class GameActivity extends SwarmActivity implements Observer {
         roundTimer.cancel();
         sounds.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // super.onBackPressed(); // Comment this super call to avoid calling finish()
+        // back is blocked to allow "continue" button
     }
 
     private void newGame(int aLevel) {
@@ -174,17 +190,31 @@ public class GameActivity extends SwarmActivity implements Observer {
         sounds.vibrate();
         if (this.gameController.isFinished()) sounds.playNo();
         else sounds.playSnooring();
-        // after 300ms finish activity with results
-        CountDownTimer timer = new CountDownTimer(300, 100) {
-            @Override
-            public void onTick(long millisUntilFinished) {}
+        // show game over and block playground
+        mSymbolsGrid.setEnabled(false);
+        buttonGameOver.setVisibility(View.VISIBLE);
+        // calculate game results
+        final long points = pointsCalc.getPoints(history);
+        BrainIndex brainIndexCalc = new BrainIndex(getApplicationContext());
+        final int idx = brainIndexCalc.calculate(history);
+        int change = brainIndexCalc.change(idx);
+        if (change<0) change = 0;
+        // show game result
+        String res = String.format(getString(R.string.game_result), idx, change);
+        if (change>0) res += " Wow!";
+        mResultText.setText(res);
+        mResultText.setVisibility(View.VISIBLE);
+        // mark solution
+        int[] sol = game.solution();
+        if (sol != null) {
+            Log.d("SOLUTION", "x:" + sol[0] + "y:" + sol[1]);
+            adapter.setSolution(sol);
+            adapter.notifyDataSetChanged();
+            mSymbolsGrid.invalidateViews();
+        }
+        else Toast.makeText(this, "Ups! Something went wrong! Unresolvable task?!#!", Toast.LENGTH_LONG);
 
-            @Override
-            public void onFinish() {
-                mSymbolsGrid.setBackgroundColor(Color.BLACK);
-                finishActivityWithResults();
-            }
-        }.start();
+        // TODO: mark valid solution
     }
 
     private void roundSuccess() {
@@ -234,46 +264,26 @@ public class GameActivity extends SwarmActivity implements Observer {
         newGame(next);
     }
 
-    private void finishActivityWithResults() {
+
+
+
+
+    public void onGameOver(View view) {
+        // calculare result (again)
         final long points = pointsCalc.getPoints(history);
         BrainIndex brainIndexCalc = new BrainIndex(getApplicationContext());
         final int idx = brainIndexCalc.calculate(history);
         int change = brainIndexCalc.change(idx);
-        StringBuilder strb = new StringBuilder();
-        strb.append("Max Level: ").append(level.levelNum).append("\n");
-        strb.append("Score: ").append(points).append("\n");
-        if (change > 0) {
-            strb.append("Brain Index Gain: +").append(change).append("p\n");
-            strb.append("Current Brain Index: ").append(idx).append("/").append(brainIndexCalc.maxIndex()).append("\n");
+        // show adds
+        if (System.currentTimeMillis()%3==1) {
+            InterstitialAd.display(GameActivity.this);
         }
-        else {
-            strb.append("Brain Index Gain: 0p").append("\n");
-            strb.append("Current Brain Index: ").append(brainIndexCalc.currentIndex()).append("/").append(brainIndexCalc.maxIndex()).append("\n");
-        }
-        strb.append("\nCongratulations!");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Game result")
-                .setMessage(strb.toString())
-                .setCancelable(false)
-                .setNeutralButton("Close", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // show adds
-                        if (System.currentTimeMillis()%3==1) {
-                            InterstitialAd.display(GameActivity.this);
-                        }
-                        // finish activity
-                        Intent ret = new Intent();
-                        ret.putExtra("POINTS", points);
-                        ret.putExtra("BRAIN_INDEX", idx);
-                        GameActivity.this.setResult(RESULT_OK, ret);
-                        GameActivity.this.finish();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-
+        // finish activity
+        Intent ret = new Intent();
+        ret.putExtra("POINTS", points);
+        ret.putExtra("BRAIN_INDEX", idx);
+        GameActivity.this.setResult(RESULT_OK, ret);
+        GameActivity.this.finish();
     }
 
     private int calculateNewLevel() {

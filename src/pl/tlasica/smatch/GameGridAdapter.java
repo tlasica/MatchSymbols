@@ -21,6 +21,7 @@ public class GameGridAdapter extends BaseAdapter {
     private Game            game;
     private GameController  controller;
     private Button[]        items;
+    private int[]           solution;
 
     private int[] colors = {
             Color.parseColor("#0099CC"),        // blue
@@ -59,6 +60,7 @@ public class GameGridAdapter extends BaseAdapter {
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
             button.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, GridView.AUTO_FIT));
             items[position] = button;
+            Log.d("getView()", "pos:"+position);
         }
         else button = (Button)convertView;
 
@@ -70,8 +72,20 @@ public class GameGridAdapter extends BaseAdapter {
         button.setId(position);
         button.setOnClickListener(new MyOnClickListener(controller, position));
 
+        // if solution....
+        if (solution != null) {
+            if (position==solution[0] || position==solution[1]) {
+                button.setBackgroundResource(R.drawable.button_selected);
+            }
+            else button.setBackgroundResource(R.drawable.button);
+        }
+
         return button;
 
+    }
+
+    public void setSolution(int[] sol) {
+        solution = sol;
     }
 
     private int textColor(int colorIndex) {

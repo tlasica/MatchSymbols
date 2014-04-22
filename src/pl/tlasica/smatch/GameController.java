@@ -1,7 +1,10 @@
 package pl.tlasica.smatch;
 
 import android.util.Log;
+import android.util.Pair;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 /**

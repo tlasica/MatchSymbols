@@ -1,6 +1,8 @@
 package pl.tlasica.smatch;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by tomek on 22.03.14.
@@ -60,6 +62,21 @@ public class Game {
 
     public int numCols() {
         return  numCols;
+    }
+
+    public int[] solution() {
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        int numCells = numRows * numCols;
+        for(int i=0; i<numCells; ++i ) {
+            Cell cell = cell(i);
+            if (map.containsKey(cell.symbol)) {
+                int prev = map.get(cell.symbol);
+                int[] res = {prev, i};
+                return res;
+            }
+            map.put(cell.symbol, i);
+        }
+        return null;
     }
 
     public String toString() {
