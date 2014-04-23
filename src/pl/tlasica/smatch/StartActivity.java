@@ -111,8 +111,12 @@ public class StartActivity extends SwarmActivity {
         //if (Swarm.isEnabled()) btnInit.setVisibility(View.GONE);
         //else btnInit.setVisibility(View.VISIBLE);
         // leaderboard allowed if swarm initialized and enabled
-        if (Swarm.isEnabled() && Swarm.isInitialized()) btnBoard.setVisibility(View.VISIBLE);
-        else btnBoard.setVisibility(View.GONE);
+        boolean swarmEnabled = Swarm.isEnabled();
+        boolean swarmInitialized = Swarm.isInitialized();
+        if (swarmEnabled)
+            btnBoard.setVisibility(View.VISIBLE);
+        else
+            btnBoard.setVisibility(View.GONE);
     }
 
     private void updateBrainIndex() {
@@ -228,6 +232,7 @@ public class StartActivity extends SwarmActivity {
                     brainIndex.storeIndex(brIndex);
                     updateBrainIndex();
                     //TODO: można tutaj sprawdzać if (Swarm.isEnabled()) ale tak jest ok.
+                    if (!Swarm.isEnabled()) initSwarm();
                     SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brIndex);
                 }
             }

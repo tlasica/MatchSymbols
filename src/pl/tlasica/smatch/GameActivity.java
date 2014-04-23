@@ -55,6 +55,8 @@ public class GameActivity extends SwarmActivity implements Observer {
     int             numRounds = 0;
     SoundPoolPlayer sounds;
 
+    private boolean isFinished = false;
+
     PointsCalculator    pointsCalc;
     CountDownTimer  roundTimer = null;
 
@@ -106,8 +108,8 @@ public class GameActivity extends SwarmActivity implements Observer {
     @Override
     public void onBackPressed()
     {
-        // super.onBackPressed(); // Comment this super call to avoid calling finish()
-        // back is blocked to allow "continue" button
+        if (!isFinished) super.onBackPressed();
+        else onGameOver(null);
     }
 
     private void newGame(int aLevel) {
@@ -156,6 +158,7 @@ public class GameActivity extends SwarmActivity implements Observer {
 
             @Override
             public void onFinish() {
+                saveRoundInHistory(false);
                 roundFailure();
             }
         }.start();
@@ -184,6 +187,7 @@ public class GameActivity extends SwarmActivity implements Observer {
     }
 
     private void roundFailure() {
+        isFinished = true;
         // set background red
         mSymbolsGrid.setBackgroundColor(COLOR_RED);
         // play sound
@@ -218,6 +222,7 @@ public class GameActivity extends SwarmActivity implements Observer {
     }
 
     private void roundSuccess() {
+        isFinished = true;
         // set background green
         mSymbolsGrid.setBackgroundColor(COLOR_GREEN);
         // play sound

@@ -46,7 +46,7 @@ public class BrainIndex {
         int maxSuccLevel = history.get(history.size()-1).level-1;
         // for up to 4 maximum successfull rounds calculate %time
         int start = history.size()-5;
-        int end = history.size()-2;
+        int end = history.size()-1;
         if (start<0) start = 0;
         if (end<0) end = 0;
         double sumWeight = 0;

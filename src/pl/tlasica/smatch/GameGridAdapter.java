@@ -72,8 +72,8 @@ public class GameGridAdapter extends BaseAdapter {
         button.setId(position);
         button.setOnClickListener(new MyOnClickListener(controller, position));
 
-        // if solution....
-        if (solution != null) {
+        if (isSolved()) {
+            button.setClickable(false);
             if (position==solution[0] || position==solution[1]) {
                 button.setBackgroundResource(R.drawable.button_selected);
             }
@@ -84,8 +84,13 @@ public class GameGridAdapter extends BaseAdapter {
 
     }
 
+    private boolean isSolved() {
+        return solution != null;
+    }
+
     public void setSolution(int[] sol) {
         solution = sol;
+
     }
 
     private int textColor(int colorIndex) {
