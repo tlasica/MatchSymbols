@@ -82,6 +82,9 @@ public class StartActivity extends SwarmActivity {
         mToggleSoundButton = (ToggleButton) findViewById(R.id.toggleSoundButton);
         settings = new Settings(getApplicationContext());
         mToggleSoundButton.setChecked(settings.sound());
+
+        AppRater rater = new AppRater(this);
+        rater.appLaunched();
     }
 
 

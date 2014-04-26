@@ -25,8 +25,8 @@
     <string name="share_how">How do you want to share?</string>
     <string name="button_leaderboard">Leaderboard</string>
     <string name="button_initswarm">Join Community</string>
-    <string name="button_NewGame">Play Level 1</string>
-    <string name="button_continue">Play Level %d</string>
+    <string name="button_NewGame">Start (level 1)</string>
+    <string name="button_continue">Continue (level %d)</string>
     <string name="button_game_over">Continue</string>
     <string name="game_result">Game result:\nBrain power: %1$d (+%2$d)</string>
 </resources>
