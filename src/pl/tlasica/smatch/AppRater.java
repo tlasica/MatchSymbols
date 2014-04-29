@@ -77,9 +77,7 @@ public class AppRater {
 
         TextView tv = new TextView(mContext);
 
-        String msg = "Dziękuję za korzystanie z Okazji!\n" +
-                "Możesz dodawać własne okazje (taki niebieski plusik).\n" +
-                "Oceń aplikację i wspomóż kulturę, sztukę, sport i historię. Dzięki! Twoje Zdrowie!";
+        String msg = "Would you be so kind and rate S*Match on the Play Stor?";
 
         tv.setText(msg);
         tv.setWidth(240);
@@ -87,7 +85,7 @@ public class AppRater {
         ll.addView(tv);
 
         Button bRate = new Button(mContext);
-        bRate.setText("Oceń " + APP_TITLE);
+        bRate.setText("Rate " + APP_TITLE);
         bRate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 storeDoNotShowAgain();
@@ -99,7 +97,7 @@ public class AppRater {
         ll.addView(bRate);
 
         Button bLater = new Button(mContext);
-        bLater.setText("Później");
+        bLater.setText("Later");
         bLater.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 reset();
@@ -109,7 +107,7 @@ public class AppRater {
         ll.addView(bLater);
 
         Button b3 = new Button(mContext);
-        b3.setText("Nie, dziękuję");
+        b3.setText("No, thanks");
         b3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 storeDoNotShowAgain();
