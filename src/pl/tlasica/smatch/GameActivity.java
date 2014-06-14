@@ -175,14 +175,21 @@ public class GameActivity extends SwarmActivity implements Observer {
     public void update(Observable observable, Object data) {
         if (observable == gameController) {
             boolean success = gameController.isSuccess();
-            Log.d("GAME","game finished with success:"+success);
-            // save in history
-            saveRoundInHistory(success);
-            // stop round timer
-            roundTimer.cancel();
-
-            if (success) roundSuccess();
-            else roundFailure();
+            if (success) {
+                Log.d("GAME","game finished with success:"+success);
+                // save in history
+                saveRoundInHistory(success);
+                // stop round timer
+                roundTimer.cancel();
+                roundSuccess();
+            }
+            else {  // clear invalid selection
+                Log.d("GAME","invalid selection");
+                // toast
+                Toast.makeText(this, getString(R.string.msg_invalid_selection), Toast.LENGTH_SHORT);
+                // play sound
+                sounds.playNo();
+            }
         }
     }
 
