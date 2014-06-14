@@ -80,7 +80,8 @@ public class GameGenerator {
     private char randomAlphanumeric() {
         int i = random.nextInt(26+10);
         if (i<26) return (char)('A' + i);   // A..Z
-        else return (char)('0' + (i-26));   // 0..9
+        if (i==26) return '#';              // # instead of 0
+        else return (char)('0' + (i-26));   // 1..9
     }
 
 }

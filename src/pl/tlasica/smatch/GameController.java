@@ -34,12 +34,12 @@ public class GameController extends Observable {
 
     boolean select(int pos) {
         if (selected1<0) {
-            selected1=pos;
+            selected1 = pos;
             checkFinished();
             return true;
         }
         else if (selected2<0) {
-            selected2=pos;
+            selected2 = pos;
             checkFinished();
             return true;
         }
