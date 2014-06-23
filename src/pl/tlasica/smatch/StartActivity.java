@@ -104,16 +104,6 @@ public class StartActivity extends SwarmActivity {
         // configure facebook
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
-        // login to facebook
-        // start Facebook Login
-        Session.openActiveSession(this, true, new Session.StatusCallback() {
-
-            // callback when session changes state
-            @Override
-            public void call(Session session, SessionState state, Exception exception) {
-
-            }
-        });
 
         AppRater rater = new AppRater(this);
         rater.appLaunched();
@@ -230,7 +220,27 @@ public class StartActivity extends SwarmActivity {
         SwarmLeaderboard.showLeaderboard(SWARM_LEADERBOARD_ID);
     }
 
-    public void facebookShareWithFeedDialog(View view) {
+    public void facebookLoginAndShare(View view) {
+        if (Session.getActiveSession() != null && Session.getActiveSession().isOpened()) {
+            facebookShareWithFeedDialog();
+        }
+        else {
+            Session.openActiveSession(this, true, new Session.StatusCallback() {
+
+                // callback when session changes state
+                @Override
+                public void call(Session session, SessionState state, Exception exception) {
+                    if (state == SessionState.OPENED) {
+                        facebookShareWithFeedDialog();
+                    }
+
+                }
+            });
+        }
+
+    }
+
+    private void facebookShareWithFeedDialog() {
         int index = brainIndex.currentIndex();
         String msg = String.format(getString(R.string.share_msg), index);
 
