@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+import com.facebook.*;
+import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.WebDialog;
 import com.heyzap.sdk.ads.HeyzapAds;
 import com.swarmconnect.Swarm;
 import com.swarmconnect.SwarmActivity;
@@ -28,6 +33,16 @@ import java.util.List;
 //TODO add "share on FB" button
 //TODO add some comparison with people around the world?
 
+/*
+var title = 'My Title';
+var summary = 'This is my summary';
+var url = 'http://www.mydomain.com/path/to/page';
+var image = 'http://www.mydomain.com/images/myimage.png';
+
+var fb = window.open('http://www.facebook.com/sharer.php?s=100&p[title]='+encodeURIComponent(title)+'&p[url]='+encodeURIComponent(url)+'&p[summary]='+encodeURIComponent(summary)+'&p[images][0]='+encodeURIComponent(image));
+fb.focus();
+*/
+
 public class StartActivity extends SwarmActivity {
 
     private static final int REQ_CODE = 111;
@@ -40,6 +55,11 @@ public class StartActivity extends SwarmActivity {
     final int       SWARM_LEADERBOARD_ID = 15332;
     final int       SWARM_APP_ID = 10560;
     final String    SWARM_APP_KEY = "ca4f8e194f72f503054e3a7381e0a557";
+
+    final String    APP_URL = "http://bit.ly/1ibDjjJ";
+    final String    PIC_URL = "https://raw.githubusercontent.com/tlasica/MatchSymbols/master/icon_96.png";
+
+    private UiLifecycleHelper uiHelper;
 
     /**
      * Called when the activity is first created.
@@ -62,7 +82,6 @@ public class StartActivity extends SwarmActivity {
         setContentView(R.layout.main);
 
         // set up fonts
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonShare), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonContinue), Typeface.NORMAL);
         FontManager.setTitleFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
@@ -73,7 +92,6 @@ public class StartActivity extends SwarmActivity {
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
 
-
         brainIndex = new BrainIndex(getApplicationContext());
         mTextBrainIndex = (TextView) findViewById(R.id.tv_start_brain_index);
         personalBest = new PersonalBest(getApplicationContext());
@@ -83,6 +101,20 @@ public class StartActivity extends SwarmActivity {
         settings = new Settings(getApplicationContext());
         mToggleSoundButton.setChecked(settings.sound());
 
+        // configure facebook
+        uiHelper = new UiLifecycleHelper(this, null);
+        uiHelper.onCreate(savedInstanceState);
+        // login to facebook
+        // start Facebook Login
+        Session.openActiveSession(this, true, new Session.StatusCallback() {
+
+            // callback when session changes state
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+
+            }
+        });
+
         AppRater rater = new AppRater(this);
         rater.appLaunched();
     }
@@ -91,6 +123,7 @@ public class StartActivity extends SwarmActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        uiHelper.onResume();
         updateSwarmUI();
         // show/hide continue button
         Button btn = (Button) findViewById(R.id.buttonContinue);
@@ -103,6 +136,26 @@ public class StartActivity extends SwarmActivity {
         else {
             btn.setVisibility(View.GONE);
         }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
     }
 
     private void updateSwarmUI() {
@@ -177,13 +230,47 @@ public class StartActivity extends SwarmActivity {
         SwarmLeaderboard.showLeaderboard(SWARM_LEADERBOARD_ID);
     }
 
+    public void facebookShareWithFeedDialog(View view) {
+        int index = brainIndex.currentIndex();
+        String msg = String.format(getString(R.string.share_msg), index);
+
+        Bundle params = new Bundle();
+        params.putString("caption", "Train your brain and think faster with S*MATCH");
+        params.putString("description", "This simple but addictive android game is a perfect training to make you think, remember and recognize pictures faster");
+        params.putString("link", APP_URL);
+        params.putString("picture", PIC_URL);
+        params.putString("name", msg);
+
+        WebDialog feedDialog = (
+                new WebDialog.FeedDialogBuilder(this, Session.getActiveSession(), params))
+                .setOnCompleteListener(new WebDialog.OnCompleteListener() {
+
+                    @Override
+                    public void onComplete(Bundle values,
+                                           FacebookException error) {
+                        if (error == null) {
+                            final String postId = values.getString("post_id");
+                            if (postId != null) Log.d("FB", "posted");
+                        } else if (error instanceof FacebookOperationCanceledException) {
+                            Log.i("FB", "Publish cancelled");
+                        } else {
+                            Log.w("FB", "Error posting story");
+                        }
+                    }
+
+                })
+                .build();
+        feedDialog.show();
+    }
+
+
     public void share(View view) {
 
         Log.d("START", "share()");
         // building message
         int index = brainIndex.currentIndex();
         String msg = String.format(getString(R.string.share_msg), index);
-        String url = "http://bit.ly/1ibDjjJ";
+        String url = APP_URL;
         msg = msg + " " + url;
         // prepare intent
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -194,20 +281,18 @@ public class StartActivity extends SwarmActivity {
         startActivity(Intent.createChooser(intent, getString(R.string.share_how)));
     }
 
-    public void shareOnFacebook(View view) {
+    /*
+    public void shareOnFacebookWithSharerUrl(View view) {
+        // building message
+        int index = brainIndex.currentIndex();
+        String msg = String.format(getString(R.string.share_msg), index);
         String url = "http://bit.ly/1ibDjjJ";
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, url);
-        List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo info : matches) {
-            if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook")) {
-                intent.setPackage(info.activityInfo.packageName);
-                break;
-            }
-        }
-        if (intent.getPackage() != null) startActivity(intent);
+        // show
+        Uri uri = Uri.parse("http://m.facebook.com/sharer.php?u=APP_URL&p[title]="+msg+"&p[images][0]="+PIC_URL+"&t=dupa");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
+    */
 
     private int startLevelForBrainIndex() {
         int maxSuccLevel = brainIndex.guesslevelFromIndex( brainIndex.currentIndex() );
@@ -222,6 +307,8 @@ public class StartActivity extends SwarmActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         if (requestCode == REQ_CODE) {
 
             if(resultCode == RESULT_OK){
@@ -242,6 +329,19 @@ public class StartActivity extends SwarmActivity {
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
             }
+        }
+        else {
+            uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+                @Override
+                public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                    Log.e("Activity", String.format("Error: %s", error.toString()));
+                }
+
+                @Override
+                public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                    Log.i("Activity", "Success!");
+                }
+            });
         }
     }//onActivityResult
 }

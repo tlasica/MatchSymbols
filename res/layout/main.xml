@@ -4,6 +4,16 @@
     android:layout_width="match_parent">
 
 
+<ImageView
+        android:layout_marginRight="20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop=""
+        android:layout_alignParentRight="true"
+        android:background="@drawable/icon_96"
+        />
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
@@ -13,23 +23,25 @@
         >
 
     <TextView
+            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="S*Match"
             android:id="@+id/tv_start_apptitle"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="left"
             android:textColor="#FF8800"
             android:textSize="32dp"
             android:singleLine="false"/>
 
     <TextView
+            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_subtitle"
             android:singleLine="true"
             android:layout_marginTop="6dp"
             android:text="@string/subtitle"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="left"
             android:textIsSelectable="true"
             android:textColor="#FFBB33"
             android:textSize="20dp"/>
@@ -125,38 +137,53 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 
-    <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonShare"
-            android:padding="5dp"
-            android:id="@+id/buttonShare"
-            android:clickable="true"
-            android:onClick="share"
-            android:singleLine="true"
-            android:background="@drawable/button_blue"
-            android:textColor="#ffffff"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-
 </LinearLayout>
 
-    <ToggleButton
+    <RelativeLayout
+            android:padding="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    <ImageButton
+            android:id="@+id/facebookShareButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:onClick="facebookShareWithFeedDialog"
+            android:background="@drawable/facebook"
+            />
+
+    <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/facebookShareButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:onClick="share"
+            android:background="@drawable/share"
+            />
+
+    <ToggleButton
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text=""
             android:textOn=""
             android:textOff=""
             android:id="@+id/toggleSoundButton"
             android:layout_gravity="right"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
             android:clickable="true"
             android:onClick="toggleSound"
             android:background="@drawable/toggle_sound_button"/>
 
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -5,8 +5,8 @@
     <string name="game_goal">Find %d identical symbols. Be quick!</string>
     <string name="game_points">Score:</string>
     <string name="game_round_points">Time left: %d s</string>
-    <string name="subtitle">Visual Brain Training</string>
-    <string name="label_brain_index">Your brain power: </string>
+    <string name="subtitle">Fast Brain Training</string>
+    <string name="label_brain_index">Brain index: </string>
     <string name="button_instruction">Instruction</string>
     <string name="help">
     Find identical symbols as quick as possible!
@@ -21,7 +21,7 @@
     Good Luck!
     </string><string name="game_level">Level: </string>
     <string name="buttonShare">Share my result</string>
-    <string name="share_msg">Wow! My visual brain power is %d/1000 in S*Match android app. Check it!</string>
+    <string name="share_msg">My S*Match brain index is %d out of 1000!</string>
     <string name="share_how">How do you want to share?</string>
     <string name="button_leaderboard">Leaderboard</string>
     <string name="button_initswarm">Join Community</string>
@@ -30,4 +30,6 @@
     <string name="button_game_over">Continue</string>
     <string name="game_result">Game result:\nBrain power: %1$d (+%2$d)</string>
     <string name="msg_invalid_selection">those 2 are not identical!</string>
+    <!-- FACEBOOK APP ID -->
+    <string name="fb_app_id">1504862259744546"</string>
 </resources>
