@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.heyzap.sdk.ads.InterstitialAd;
 import com.swarmconnect.SwarmActivity;
 
 import java.util.ArrayList;
@@ -286,10 +285,6 @@ public class GameActivity extends SwarmActivity implements Observer {
         BrainIndex brainIndexCalc = new BrainIndex(getApplicationContext());
         final int idx = brainIndexCalc.calculate(history);
         int change = brainIndexCalc.change(idx);
-        // show adds
-        if (System.currentTimeMillis()%3==1) {
-            InterstitialAd.display(GameActivity.this);
-        }
         // finish activity
         Intent ret = new Intent();
         ret.putExtra("POINTS", points);

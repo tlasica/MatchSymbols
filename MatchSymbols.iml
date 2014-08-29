@@ -19,12 +19,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="SwarmConnect" />
-    <orderEntry type="library" name="heyzap-ads-sdk" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/app/SwarmConnect/library/libs/Swarm.jar!/" />
+          <root url="jar://$USER_HOME$/apps/SwarmConnect/library/libs/Swarm.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

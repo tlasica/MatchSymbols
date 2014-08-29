@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class FontManager {
 
     private static Typeface fontNOZSTUDIO;
-    private static Typeface fontLuckiestGuy;
+    private static Typeface fontSymbols;
     private static Typeface fontRocko;
     private static Application app;
 
@@ -27,7 +27,7 @@ public class FontManager {
     //TODO: change for better font
     public static void setSymbolsFont(Button button, int style) {
         if (button!=null) {
-            button.setTypeface( getLuckiestGuyFont(), style );
+            button.setTypeface( getSymbolsFont(), style );
         }
 
     }
@@ -68,11 +68,11 @@ public class FontManager {
         return fontNOZSTUDIO;
     }
 
-    private static Typeface getLuckiestGuyFont() {
-        if (fontLuckiestGuy==null) {
-            fontLuckiestGuy = Typeface.createFromAsset(app.getAssets(),"fonts/LuckiestGuy.ttf");
+    private static Typeface getSymbolsFont() {
+        if (fontSymbols ==null) {
+            fontSymbols = Typeface.createFromAsset(app.getAssets(),"fonts/junegull.ttf");
         }
-        return fontLuckiestGuy;
+        return fontSymbols;
     }
 
 }

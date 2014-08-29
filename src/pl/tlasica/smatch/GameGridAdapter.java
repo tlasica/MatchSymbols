@@ -24,11 +24,11 @@ public class GameGridAdapter extends BaseAdapter {
     private int[]           solution;
 
     private int[] colors = {
-            Color.parseColor("#0099CC"),        // blue
-            Color.parseColor("#9933CC"),        // violet
-            Color.parseColor("#669900"),        // green
-            Color.parseColor("#FF8800"),        // orange
-            Color.parseColor("#CC0000") };      // red
+            Color.parseColor("#268bd2"),        // blue
+            Color.parseColor("#6c71c4"),        // violet
+            Color.parseColor("#859900"),        // green
+            Color.parseColor("#cb4b16"),        // orange
+            Color.parseColor("#dc322f") };      // red
 
 
     public GameGridAdapter(Context c, GameController gc) {

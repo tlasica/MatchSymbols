@@ -1,13 +1,10 @@
 package pl.tlasica.smatch;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,17 +12,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.facebook.*;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.WebDialog;
-import com.heyzap.sdk.ads.HeyzapAds;
 import com.swarmconnect.Swarm;
 import com.swarmconnect.SwarmActivity;
 import com.swarmconnect.SwarmLeaderboard;
-
-import java.util.List;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
@@ -67,9 +60,6 @@ public class StartActivity extends SwarmActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Initialize HeyzApp
-        HeyzapAds.start(this);
 
         // Initialize Swarm if enabled
         if (Swarm.isEnabled()) initSwarm();
