@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">S*Match</string>
     <string name="gameActivityTitle">Play!</string>
-    <string name="game_goal">Find %d identical symbols. Be quick!</string>
+    <string name="game_goal">Find %d identical symbols.</string>
     <string name="game_points">Score:</string>
     <string name="game_round_points">Time left: %d s</string>
-    <string name="subtitle">Fast Brain Training</string>
+    <string name="subtitle">Brain Training Game</string>
     <string name="label_brain_index">Brain index: </string>
     <string name="button_instruction">Instruction</string>
     <string name="help">
@@ -25,11 +25,12 @@
     <string name="share_how">How do you want to share?</string>
     <string name="button_leaderboard">Leaderboard</string>
     <string name="button_initswarm">Join Community</string>
-    <string name="button_NewGame">Start (level 1)</string>
-    <string name="button_continue">Continue (level %d)</string>
+    <string name="button_NewGame">Demo (level 1)</string>
+    <string name="button_continue">Play (level %d)</string>
     <string name="button_game_over">Continue</string>
-    <string name="game_result">Game result:\nBrain power: %1$d (+%2$d)</string>
+    <string name="game_result">Your index: %1$d (+%2$d)</string>
     <string name="msg_invalid_selection">those 2 are not identical!</string>
     <!-- FACEBOOK APP ID -->
     <string name="fb_app_id">1504862259744546"</string>
+    <string name="game_over">Game Over</string>
 </resources>

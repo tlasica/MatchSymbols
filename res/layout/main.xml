@@ -28,8 +28,8 @@
             android:text="S*Match"
             android:id="@+id/tv_start_apptitle"
             android:layout_gravity="left"
-            android:textColor="#FF8800"
-            android:textSize="32dp"
+            android:textColor="@color/orange"
+            android:textSize="40sp"
             android:singleLine="false"/>
 
     <TextView
@@ -42,14 +42,14 @@
             android:text="@string/subtitle"
             android:layout_gravity="left"
             android:textIsSelectable="true"
-            android:textColor="#FFBB33"
-            android:textSize="20dp"/>
+            android:textColor="@color/base2"
+            android:textSize="16sp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_start_brain_index"
-            android:textColor="#33B5E5"
+            android:textColor="@color/blue"
             android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
@@ -69,6 +69,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="32sp"
             android:padding="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
@@ -86,6 +87,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="32sp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"/>
@@ -99,6 +101,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="32sp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -115,6 +118,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="32sp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -132,6 +136,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="32sp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>

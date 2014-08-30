@@ -43,6 +43,7 @@ public class GameActivity extends SwarmActivity implements Observer {
     TextView        mCurrLevelText;
     Button          buttonGameOver;
     TextView        mResultText;
+    TextView        mGameOverText;
 
     Game            game;
     GameController  gameController;
@@ -82,8 +83,12 @@ public class GameActivity extends SwarmActivity implements Observer {
         mCurrLevelText = (TextView) findViewById(R.id.tv_game_level);
         FontManager.setMainFont(mCurrLevelText, Typeface.NORMAL);
 
+        mGameOverText = (TextView) findViewById(R.id.tv_game_over);
+        FontManager.setSymbolsFont(mResultText, Typeface.NORMAL);
+        mGameOverText.setVisibility(View.GONE);
+
         buttonGameOver = (Button) findViewById(R.id.buttonGameOver);
-        FontManager.setMainFont(buttonGameOver, Typeface.NORMAL);
+        FontManager.setButtonFont(buttonGameOver, Typeface.NORMAL);
         buttonGameOver.setVisibility(View.GONE);
 
         mResultText = (TextView) findViewById(R.id.tv_game_result);
@@ -195,13 +200,16 @@ public class GameActivity extends SwarmActivity implements Observer {
     private void roundFailure() {
         isFinished = true;
         // set background red
-        mSymbolsGrid.setBackgroundColor(COLOR_RED);
+        // mSymbolsGrid.setBackgroundColor(COLOR_RED);
+        // show game over
+        mGameOverText.setVisibility(View.VISIBLE);
         // play sound
         sounds.vibrate();
         if (this.gameController.isFinished()) sounds.playNo();
         else sounds.playSnooring();
         // show game over and block playground
         mSymbolsGrid.setEnabled(false);
+        buttonGameOver.setText("Close");
         buttonGameOver.setVisibility(View.VISIBLE);
         // calculate game results
         final long points = pointsCalc.getPoints(history);
@@ -231,6 +239,7 @@ public class GameActivity extends SwarmActivity implements Observer {
         isFinished = true;
         // set background green
         mSymbolsGrid.setBackgroundColor(COLOR_GREEN);
+        buttonGameOver.setText("Next Level");
         // play sound
         long dur = history.get(history.size()-1).durationMs;
         if (level.goldReward(dur)) {

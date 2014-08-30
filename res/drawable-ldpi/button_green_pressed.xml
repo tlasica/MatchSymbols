@@ -17,9 +17,9 @@
         />
 <gradient
         android:angle="90"
-        android:startColor="#8fb716"
-        android:centerColor="#a7cf29"
-        android:endColor="#c3f12f"
+        android:startColor="@color/cyan"
+        android:centerColor="@color/cyan"
+        android:endColor="@color/cyan"
         android:type="linear"
         />
 

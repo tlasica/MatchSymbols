@@ -72,11 +72,11 @@ public class StartActivity extends SwarmActivity {
         setContentView(R.layout.main);
 
         // set up fonts
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonContinue), Typeface.NORMAL);
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
-        FontManager.setTitleFont((Button) findViewById(R.id.buttonSwarm), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonContinue), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonSwarm), Typeface.NORMAL);
 
         FontManager.setTitleFont((TextView) findViewById(R.id.tv_start_apptitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);

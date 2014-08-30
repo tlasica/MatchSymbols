@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="#FFBB33"
+            android:textColor="@color/base2"
             android:textSize="16dp"
             />
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="#33B5E5"
+            android:textColor="@color/blue"
             android:textSize="16dp"
             android:layout_below="@+id/tv_game_goal"
             android:layout_alignParentLeft="true"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginRight="10dp"
-                android:textColor="#FF8800"
+                android:textColor="@color/orange"
                 android:textSize="16dp"
                 android:layout_below="@+id/tv_game_goal"
                 android:layout_alignParentRight="true"
@@ -56,6 +56,23 @@
             android:stackFromBottom="true"/>
 
     <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_game_over"
+            android:singleLine="true"
+            android:layout_marginTop="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/game_over"
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="false"
+            android:textColor="@color/red"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:layout_below="@+id/symbolsGrid"/>
+
+
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_game_result"
@@ -64,13 +81,13 @@
             android:text="@string/game_result"
             android:layout_gravity="center_horizontal"
             android:textIsSelectable="true"
-            android:textColor="#FFBB33"
+            android:textColor="#b58900"
             android:textSize="20dp"
             android:layout_above="@+id/buttonGameOver"/>
 
 
     <Button
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:text="@string/button_game_over"
@@ -81,6 +98,7 @@
             android:singleLine="true"
             android:background="@drawable/button_green"
             android:textColor="#ffffff"
+            android:textSize="24sp"
             android:padding="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"

@@ -10,21 +10,26 @@ import android.widget.TextView;
  */
 public class FontManager {
 
-    private static Typeface fontNOZSTUDIO;
+    private static Typeface fontTitle;
     private static Typeface fontSymbols;
-    private static Typeface fontRocko;
+    private static Typeface fontNormal;
     private static Application app;
 
     public static void init(Application a) {
         app = a;
-        getNOZSTUDIOFont();
+        getTitleFont();
     }
 
     public static void setSmartSize(TextView view, int size) {
         view.setTextSize(size * app.getResources().getDisplayMetrics().density);
     }
 
-    //TODO: change for better font
+    public static void setSymbolsFont(TextView view, int style) {
+        if (view!=null) {
+            view.setTypeface( getSymbolsFont(), style );
+        }
+    }
+
     public static void setSymbolsFont(Button button, int style) {
         if (button!=null) {
             button.setTypeface( getSymbolsFont(), style );
@@ -34,38 +39,37 @@ public class FontManager {
 
     public static void setMainFont(Button button, int style) {
         if (button!=null) {
-            button.setTypeface( getRockoFont(), style );
+            button.setTypeface( getNormalFont(), style );
         }
 
     }
 
     public static void setMainFont(TextView view, int style) {
-        view.setTypeface( getRockoFont(), style );
+        view.setTypeface( getNormalFont(), style );
     }
 
-    public static void setTitleFont(Button button, int style) {
+    public static void setButtonFont(Button button, int style) {
         if (button!=null) {
-            button.setTypeface( getNOZSTUDIOFont(), style );
+            button.setTypeface( getSymbolsFont(), style );
         }
-
     }
 
     public static void setTitleFont(TextView view, int style) {
-        view.setTypeface( getNOZSTUDIOFont(), style );
+        view.setTypeface( getSymbolsFont(), style );
     }
 
-    private static Typeface getRockoFont() {
-        if (fontRocko==null) {
-            fontRocko = Typeface.createFromAsset(app.getAssets(),"fonts/RockoFLF.ttf");
+    private static Typeface getNormalFont() {
+        if (fontNormal==null) {
+            fontNormal = Typeface.createFromAsset(app.getAssets(),"fonts/Roboto-Regular.ttf");
         }
-        return fontRocko;
+        return fontNormal;
     }
 
-    private static Typeface getNOZSTUDIOFont() {
-        if (fontNOZSTUDIO==null) {
-            fontNOZSTUDIO = Typeface.createFromAsset(app.getAssets(),"fonts/nozstudio.ttf");
+    private static Typeface getTitleFont() {
+        if (fontTitle ==null) {
+            fontTitle = Typeface.createFromAsset(app.getAssets(),"fonts/Android.ttf");
         }
-        return fontNOZSTUDIO;
+        return fontTitle;
     }
 
     private static Typeface getSymbolsFont() {
