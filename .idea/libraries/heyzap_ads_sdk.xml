@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="heyzap-ads-sdk">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/app/heyzap-ads-sdk-6.4.4/android-sdk/heyzap-ads-sdk.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

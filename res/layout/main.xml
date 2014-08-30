@@ -5,12 +5,13 @@
 
 
 <ImageView
+        android:layout_margin="10dp"
         android:layout_marginRight="20dp"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/icon_96"
+        android:background="@drawable/ic_launcher"
         />
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,7 +30,7 @@
             android:id="@+id/tv_start_apptitle"
             android:layout_gravity="left"
             android:textColor="@color/orange"
-            android:textSize="40sp"
+            android:textSize="50sp"
             android:singleLine="false"/>
 
     <TextView
@@ -93,25 +94,9 @@
             android:layout_marginLeft="20dp"/>
 
     <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:clickable="true"
-            android:onClick="onInitSwarm"
-            android:singleLine="true"
-            android:background="@drawable/button_green"
-            android:textColor="#ffffff"
-            android:textSize="32sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="@string/button_initswarm"
-            android:id="@+id/buttonSwarm"/>
-
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/buttonLeaderboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="5dp"
             android:clickable="true"
             android:onClick="showLeaderboard"
@@ -125,11 +110,11 @@
             android:text="@string/button_leaderboard"/>
 
     <Button
+            android:id="@+id/buttonInstruction"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_instruction"
             android:padding="5dp"
-            android:id="@+id/buttonInstruction"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
             android:onClick="showInstruction"
@@ -138,6 +123,23 @@
             android:textColor="#ffffff"
             android:textSize="32sp"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+    <Button
+            android:id="@+id/buttonShareOnFacebook"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_share_on_facebook"
+            android:padding="5dp"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:onClick="facebookLoginAndShare"
+            android:singleLine="true"
+            android:background="@drawable/button_green"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 
@@ -151,22 +153,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-    <ImageButton
-            android:id="@+id/facebookShareButton"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:onClick="facebookLoginAndShare"
-            android:background="@drawable/facebook"
-            />
 
     <ImageButton
             android:id="@+id/shareButton"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/facebookShareButton"
+            android:layout_alignParentLeft="true"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:clickable="true"

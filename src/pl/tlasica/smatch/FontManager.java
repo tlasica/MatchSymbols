@@ -1,7 +1,9 @@
 package pl.tlasica.smatch;
 
+import android.app.Activity;
 import android.app.Application;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,6 +20,16 @@ public class FontManager {
     public static void init(Application a) {
         app = a;
         getTitleFont();
+    }
+
+    public static int getFontSize (Activity activity, int size) {
+        DisplayMetrics dMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dMetrics);
+
+        // lets try to get them back a font size realtive to the pixel width of the screen
+        final float WIDE = activity.getResources().getDisplayMetrics().widthPixels;
+        int valueWide = (int)(WIDE / (float)size / (dMetrics.scaledDensity));
+        return valueWide;
     }
 
     public static void setSmartSize(TextView view, int size) {

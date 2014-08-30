@@ -1,10 +1,11 @@
 package pl.tlasica.smatch;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,7 @@ public class StartActivity extends SwarmActivity {
     Settings            settings;
     ToggleButton        mToggleSoundButton;
     BrainIndex          brainIndex;
+    boolean             isInternetConnected = false;
 
     final int       SWARM_LEADERBOARD_ID = 15332;
     final int       SWARM_APP_ID = 10560;
@@ -61,8 +63,13 @@ public class StartActivity extends SwarmActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // log some screen params
+        Log.i("DISPLAY", "density=" + String.valueOf(getApplication().getResources().getDisplayMetrics().density));
+        Log.i("DISPLAY", "density_dpi=" + String.valueOf(getApplication().getResources().getDisplayMetrics().densityDpi));
+        Log.i("DISPLAY", "scaled_density=" + String.valueOf(getApplication().getResources().getDisplayMetrics().scaledDensity));
+
         // Initialize Swarm if enabled
-        if (Swarm.isEnabled()) initSwarm();
+        if (Swarm.isEnabled() && isInternetConnected) initSwarm();
 
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
@@ -73,19 +80,23 @@ public class StartActivity extends SwarmActivity {
 
         // set up fonts
         FontManager.setButtonFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
-        FontManager.setButtonFont((Button) findViewById(R.id.buttonContinue), Typeface.NORMAL);
+        FontManager.setButtonFont(getContinueButton(), Typeface.NORMAL);
         FontManager.setButtonFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
         FontManager.setButtonFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
-        FontManager.setButtonFont((Button) findViewById(R.id.buttonSwarm), Typeface.NORMAL);
+        FontManager.setButtonFont((Button) findViewById(R.id.buttonShareOnFacebook), Typeface.NORMAL);
 
-        FontManager.setTitleFont((TextView) findViewById(R.id.tv_start_apptitle), Typeface.NORMAL);
+        FontManager.setTitleFont(getTitleTextView(), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
         FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
+
+        getTitleTextView().setTextSize(FontManager.getFontSize(this, 6));
+
 
         brainIndex = new BrainIndex(getApplicationContext());
         mTextBrainIndex = (TextView) findViewById(R.id.tv_start_brain_index);
         personalBest = new PersonalBest(getApplicationContext());
         updateBrainIndex();
+        updateContinueButtonText();
 
         mToggleSoundButton = (ToggleButton) findViewById(R.id.toggleSoundButton);
         settings = new Settings(getApplicationContext());
@@ -95,8 +106,20 @@ public class StartActivity extends SwarmActivity {
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
 
+        // register to see connectivity changes
+        registerReceiver(mConnReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        // start app rater
         AppRater rater = new AppRater(this);
         rater.appLaunched();
+    }
+
+    private Button getContinueButton() {
+        return (Button) findViewById(R.id.buttonContinue);
+    }
+
+    private TextView getTitleTextView() {
+        return (TextView) findViewById(R.id.tv_start_apptitle);
     }
 
 
@@ -105,17 +128,6 @@ public class StartActivity extends SwarmActivity {
         super.onResume();
         uiHelper.onResume();
         updateSwarmUI();
-        // show/hide continue button
-        Button btn = (Button) findViewById(R.id.buttonContinue);
-        int nextLevel = startLevelForBrainIndex();
-        if (nextLevel>1) {
-            btn.setVisibility(View.VISIBLE);
-            String text = String.format(getString(R.string.button_continue), nextLevel);
-            btn.setText(text);
-        }
-        else {
-            btn.setVisibility(View.GONE);
-        }
     }
 
 
@@ -139,17 +151,11 @@ public class StartActivity extends SwarmActivity {
     }
 
     private void updateSwarmUI() {
-        Button btnInit = (Button) findViewById(R.id.buttonSwarm);
         Button btnBoard = (Button) findViewById(R.id.buttonLeaderboard);
-        // init button hidden if swat enabled
-        // TODO: na razie go całkowicie ukrywamy, bo jest przy komicie wynikow
-        btnInit.setVisibility(View.GONE);
-        //if (Swarm.isEnabled()) btnInit.setVisibility(View.GONE);
-        //else btnInit.setVisibility(View.VISIBLE);
         // leaderboard allowed if swarm initialized and enabled
         boolean swarmEnabled = Swarm.isEnabled();
         boolean swarmInitialized = Swarm.isInitialized();
-        if (swarmEnabled)
+        if (swarmEnabled && isInternetConnected)
             btnBoard.setVisibility(View.VISIBLE);
         else
             btnBoard.setVisibility(View.GONE);
@@ -179,6 +185,12 @@ public class StartActivity extends SwarmActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("LEVEL", level);
         startActivityForResult(intent, REQ_CODE);
+    }
+
+    private void updateContinueButtonText() {
+        int level = startLevelForBrainIndex();
+        String text = String.format(getString(R.string.button_continue), level);
+        getContinueButton().setText( text );
     }
 
     public void continueGame(View view) {
@@ -321,10 +333,13 @@ public class StartActivity extends SwarmActivity {
                     Log.d("HURRA","hurra");
                     brainIndex.storeIndex(brIndex);
                     updateBrainIndex();
-                    //TODO: można tutaj sprawdzać if (Swarm.isEnabled()) ale tak jest ok.
-                    if (!Swarm.isEnabled()) initSwarm();
-                    SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brIndex);
+                    // save results to Swarm
+                    if (isInternetConnected) {
+                        if (!Swarm.isEnabled()) initSwarm();
+                        SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brainIndex.currentIndex());
+                    }
                 }
+                updateContinueButtonText();
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -344,4 +359,34 @@ public class StartActivity extends SwarmActivity {
             });
         }
     }//onActivityResult
+
+
+    private BroadcastReceiver mConnReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo netInfo = connManager.getActiveNetworkInfo();
+            if (netInfo!=null && netInfo.isConnected()) {
+                Log.d("NETWORK", "network is connected");
+                isInternetConnected = true;
+                // init swarm
+                if (Swarm.isEnabled() && !Swarm.isInitialized()) initSwarm();
+                // show facebook share button
+                // show leadership button if swarm is connected
+                updateSwarmUI();
+            }
+            else {
+                Log.d("NETWORK", "network is disconnected");
+                isInternetConnected = false;
+                // hide facebook share button
+                // hide leaderboard button
+                updateSwarmUI();
+            }
+
+        }
+    };
+
+
 }

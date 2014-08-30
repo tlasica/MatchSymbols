@@ -26,11 +26,12 @@
     <string name="button_leaderboard">Leaderboard</string>
     <string name="button_initswarm">Join Community</string>
     <string name="button_NewGame">Demo (level 1)</string>
-    <string name="button_continue">Play (level %d)</string>
+    <string name="button_continue">Play (level %1$d)</string>
     <string name="button_game_over">Continue</string>
     <string name="game_result">Your index: %1$d (+%2$d)</string>
     <string name="msg_invalid_selection">those 2 are not identical!</string>
     <!-- FACEBOOK APP ID -->
     <string name="fb_app_id">1504862259744546"</string>
     <string name="game_over">Game Over</string>
+    <string name="button_share_on_facebook">Share my index on FB</string>
 </resources>
