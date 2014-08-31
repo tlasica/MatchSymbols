@@ -23,8 +23,6 @@ import com.swarmconnect.SwarmLeaderboard;
 
 //TODO add best personal results history and information
 //TODO start level should be a function of #points
-//TODO add some nice background
-//TODO add "share on FB" button
 //TODO add some comparison with people around the world?
 
 /*
@@ -69,7 +67,7 @@ public class StartActivity extends SwarmActivity {
         Log.i("DISPLAY", "scaled_density=" + String.valueOf(getApplication().getResources().getDisplayMetrics().scaledDensity));
 
         // Initialize Swarm if enabled
-        if (Swarm.isEnabled() && isInternetConnected) initSwarm();
+        if (Swarm.isEnabled()) initSwarm();
 
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
@@ -82,18 +80,21 @@ public class StartActivity extends SwarmActivity {
         FontManager.setButtonFont((Button) findViewById(R.id.buttonInstruction), Typeface.NORMAL);
         FontManager.setButtonFont(getContinueButton(), Typeface.NORMAL);
         FontManager.setButtonFont((Button) findViewById(R.id.buttonNewGame), Typeface.NORMAL);
-        FontManager.setButtonFont((Button) findViewById(R.id.buttonLeaderboard), Typeface.NORMAL);
-        FontManager.setButtonFont((Button) findViewById(R.id.buttonShareOnFacebook), Typeface.NORMAL);
+        FontManager.setButtonFont(getLeaderboardButton(), Typeface.NORMAL);
+        FontManager.setButtonFont(getShareOnFacebookButton(), Typeface.NORMAL);
 
         FontManager.setTitleFont(getTitleTextView(), Typeface.NORMAL);
-        FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_subtitle), Typeface.NORMAL);
-        FontManager.setMainFont( (TextView)findViewById(R.id.tv_start_brain_index), Typeface.NORMAL);
+        FontManager.setMainFont(getSubtitleTextView(), Typeface.NORMAL);
+        FontManager.setMainFont(getIndexTextView(), Typeface.NORMAL);
 
         getTitleTextView().setTextSize(FontManager.getFontSize(this, 6));
+        getSubtitleTextView().setTextSize(FontManager.getFontSize(this, 16));
+        getIndexTextView().setTextSize(FontManager.getFontSize(this, 12));
 
+        getShareOnFacebookButton().setVisibility(View.GONE);
 
         brainIndex = new BrainIndex(getApplicationContext());
-        mTextBrainIndex = (TextView) findViewById(R.id.tv_start_brain_index);
+        mTextBrainIndex = getIndexTextView();
         personalBest = new PersonalBest(getApplicationContext());
         updateBrainIndex();
         updateContinueButtonText();
@@ -106,12 +107,21 @@ public class StartActivity extends SwarmActivity {
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
 
-        // register to see connectivity changes
-        registerReceiver(mConnReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
         // start app rater
         AppRater rater = new AppRater(this);
         rater.appLaunched();
+    }
+
+    private TextView getIndexTextView() {
+        return (TextView)findViewById(R.id.tv_start_brain_index);
+    }
+
+    private TextView getSubtitleTextView() {
+        return (TextView)findViewById(R.id.tv_start_subtitle);
+    }
+
+    private Button getShareOnFacebookButton() {
+        return (Button) findViewById(R.id.buttonShareOnFacebook);
     }
 
     private Button getContinueButton() {
@@ -128,6 +138,12 @@ public class StartActivity extends SwarmActivity {
         super.onResume();
         uiHelper.onResume();
         updateSwarmUI();
+        // register to see connectivity changes
+        if (mConnReceiver == null) {
+            mConnReceiver = createBroadcastReceiver();
+            registerReceiver(mConnReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+
     }
 
 
@@ -142,6 +158,10 @@ public class StartActivity extends SwarmActivity {
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
+        if (mConnReceiver != null) {
+            this.unregisterReceiver(mConnReceiver);
+            mConnReceiver = null;
+        }
     }
 
     @Override
@@ -151,14 +171,19 @@ public class StartActivity extends SwarmActivity {
     }
 
     private void updateSwarmUI() {
-        Button btnBoard = (Button) findViewById(R.id.buttonLeaderboard);
+        Log.i("SWARM", "is_enabled=" + Swarm.isEnabled());
+        Log.i("SWARM", "is_initialized=" + Swarm.isInitialized());
+        Log.i("SWARM", "is_loggedin=" + Swarm.isLoggedIn());
         // leaderboard allowed if swarm initialized and enabled
-        boolean swarmEnabled = Swarm.isEnabled();
         boolean swarmInitialized = Swarm.isInitialized();
-        if (swarmEnabled && isInternetConnected)
-            btnBoard.setVisibility(View.VISIBLE);
+        if (Swarm.isEnabled() && isInternetConnected)
+            getLeaderboardButton().setVisibility(View.VISIBLE);
         else
-            btnBoard.setVisibility(View.GONE);
+            getLeaderboardButton().setVisibility(View.GONE);
+    }
+
+    private Button getLeaderboardButton() {
+        return (Button) findViewById(R.id.buttonLeaderboard);
     }
 
     private void updateBrainIndex() {
@@ -168,9 +193,11 @@ public class StartActivity extends SwarmActivity {
     }
 
     private void initSwarm() {
-        Log.d("SWARM", "initSwarm()");
-        Swarm.init(this, SWARM_APP_ID, SWARM_APP_KEY);
-        Swarm.setAllowGuests(true);
+        if (isInternetConnected && !Swarm.isInitialized()) {
+            Log.d("SWARM", "initSwarm()");
+            Swarm.init(this, SWARM_APP_ID, SWARM_APP_KEY);
+            Swarm.setAllowGuests(true);
+        }
     }
 
     public void onInitSwarm(View view) {
@@ -194,9 +221,10 @@ public class StartActivity extends SwarmActivity {
     }
 
     public void continueGame(View view) {
-        Log.d("START", "startGame()");
+        Log.d("START", "continue()");
         // calculate next level
         int level = startLevelForBrainIndex();
+        Log.d("START", "continue with level" + level );
         // start game activity
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("LEVEL", level);
@@ -335,11 +363,12 @@ public class StartActivity extends SwarmActivity {
                     updateBrainIndex();
                     // save results to Swarm
                     if (isInternetConnected) {
-                        if (!Swarm.isEnabled()) initSwarm();
+                        initSwarm();
                         SwarmLeaderboard.submitScoreAndShowLeaderboard(SWARM_LEADERBOARD_ID, brainIndex.currentIndex());
                     }
                 }
                 updateContinueButtonText();
+                updateSwarmUI();
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -360,33 +389,36 @@ public class StartActivity extends SwarmActivity {
         }
     }//onActivityResult
 
+    private BroadcastReceiver createBroadcastReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
 
-    private BroadcastReceiver mConnReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+                ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            NetworkInfo netInfo = connManager.getActiveNetworkInfo();
-            if (netInfo!=null && netInfo.isConnected()) {
-                Log.d("NETWORK", "network is connected");
-                isInternetConnected = true;
-                // init swarm
-                if (Swarm.isEnabled() && !Swarm.isInitialized()) initSwarm();
-                // show facebook share button
-                // show leadership button if swarm is connected
-                updateSwarmUI();
+                NetworkInfo netInfo = connManager.getActiveNetworkInfo();
+                if (netInfo!=null && netInfo.isConnected()) {
+                    Log.d("NETWORK", "network is connected");
+                    isInternetConnected = true;
+                    // init swarm
+                    if (Swarm.isEnabled()) initSwarm();
+                    // show facebook share button
+                    getShareOnFacebookButton().setVisibility(View.VISIBLE);
+                    // show leadership button if swarm is connected
+                    updateSwarmUI();
+                }
+                else {
+                    Log.d("NETWORK", "network is disconnected");
+                    isInternetConnected = false;
+                    // hide facebook share button
+                    getShareOnFacebookButton().setVisibility(View.GONE);
+                    // hide leaderboard button
+                    updateSwarmUI();
+                }
             }
-            else {
-                Log.d("NETWORK", "network is disconnected");
-                isInternetConnected = false;
-                // hide facebook share button
-                // hide leaderboard button
-                updateSwarmUI();
-            }
+        };
+    }
 
-        }
-    };
-
+    private BroadcastReceiver mConnReceiver = null;
 
 }

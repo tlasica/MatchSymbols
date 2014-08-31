@@ -129,7 +129,7 @@ public class GameActivity extends SwarmActivity implements Observer {
         // set grid columns
         mSymbolsGrid.setNumColumns(game.numCols());
         // set adapater
-        adapter = new GameGridAdapter(this, gameController);
+        adapter = new GameGridAdapter(this, this, gameController);
         mSymbolsGrid.setAdapter( adapter );
         // update level
         updateLevel();

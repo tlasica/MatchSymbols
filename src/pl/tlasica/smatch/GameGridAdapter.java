@@ -1,10 +1,10 @@
 package pl.tlasica.smatch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,6 +18,7 @@ public class GameGridAdapter extends BaseAdapter {
 
 
     private Context         mContext;
+    private Activity        mActivity;
     private Game            game;
     private GameController  controller;
     private Button[]        items;
@@ -27,12 +28,13 @@ public class GameGridAdapter extends BaseAdapter {
             Color.parseColor("#268bd2"),        // blue
             Color.parseColor("#6c71c4"),        // violet
             Color.parseColor("#859900"),        // green
-            Color.parseColor("#cb4b16"),        // orange
+            Color.parseColor("#b58900"),        // orange
             Color.parseColor("#dc322f") };      // red
 
 
-    public GameGridAdapter(Context c, GameController gc) {
+    public GameGridAdapter(Context c, Activity act, GameController gc) {
         mContext = c;
+        mActivity = act;
         game = gc.game();
         controller = gc;
         items = new Button[game.numCols*game.numRows];
@@ -57,7 +59,8 @@ public class GameGridAdapter extends BaseAdapter {
             FontManager.setSymbolsFont(button, Typeface.BOLD);
             button.setBackgroundResource(R.drawable.button);
             button.setTextColor(Color.WHITE);
-            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+            //button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+            button.setTextSize(FontManager.getFontSize(mActivity, 10));
             button.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, GridView.AUTO_FIT));
             items[position] = button;
             Log.d("getView()", "pos:"+position);

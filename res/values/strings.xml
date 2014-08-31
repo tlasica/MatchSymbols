@@ -14,7 +14,7 @@
     The score depends on the time: the faster you find them, the more points you will get for the level.
     \n\n
     There is a time limit for each level.
-    A failure or timeout will finish game session.
+    Timeout will finish the game.
     \n\n
     Your visual brain power index will be calculated from the score and level you reached.
     \n\n
