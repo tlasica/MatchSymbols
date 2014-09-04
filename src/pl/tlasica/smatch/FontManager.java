@@ -86,7 +86,7 @@ public class FontManager {
 
     private static Typeface getSymbolsFont() {
         if (fontSymbols ==null) {
-            fontSymbols = Typeface.createFromAsset(app.getAssets(),"fonts/junegull.ttf");
+            fontSymbols = Typeface.createFromAsset(app.getAssets(),"fonts/kimbalt_.ttf");
         }
         return fontSymbols;
     }
