@@ -71,7 +71,6 @@ public class StartActivity extends SwarmActivity {
 
         FontManager.init(getApplication());
         getWindow().setFormat(PixelFormat.RGBA_8888);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
@@ -175,7 +174,6 @@ public class StartActivity extends SwarmActivity {
         Log.i("SWARM", "is_initialized=" + Swarm.isInitialized());
         Log.i("SWARM", "is_loggedin=" + Swarm.isLoggedIn());
         // leaderboard allowed if swarm initialized and enabled
-        boolean swarmInitialized = Swarm.isInitialized();
         if (Swarm.isEnabled() && isInternetConnected)
             getLeaderboardButton().setVisibility(View.VISIBLE);
         else
@@ -188,7 +186,7 @@ public class StartActivity extends SwarmActivity {
 
     private void updateBrainIndex() {
         int index = brainIndex.currentIndex();
-        String msg = getString(R.string.label_brain_index) + " " + (index>0?index:"?") + "/" + brainIndex.maxIndex();
+        String msg = getString(R.string.label_brain_index) + " " + (index>0?index:"?") + "/" + BrainIndex.maxIndex();
         mTextBrainIndex.setText(msg);
     }
 

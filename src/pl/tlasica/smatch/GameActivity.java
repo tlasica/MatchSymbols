@@ -34,7 +34,6 @@ public class GameActivity extends SwarmActivity implements Observer {
 
     private final int NUM_COLORS = 5;
 
-    private final int COLOR_RED = Color.parseColor("#FF4444");
     private final int COLOR_GREEN = Color.parseColor("#99CC00");
 
     GridView        mSymbolsGrid;
@@ -64,7 +63,6 @@ public class GameActivity extends SwarmActivity implements Observer {
         super.onCreate(savedInstanceState);
         // from http://zrgiu.com/blog/2011/01/making-your-android-app-look-better/
         getWindow().setFormat(PixelFormat.RGBA_8888);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -180,9 +178,9 @@ public class GameActivity extends SwarmActivity implements Observer {
         if (observable == gameController) {
             boolean success = gameController.isSuccess();
             if (success) {
-                Log.d("GAME","game finished with success:"+success);
+                Log.d("GAME","game finished with success");
                 // save in history
-                saveRoundInHistory(success);
+                saveRoundInHistory(true);
                 // stop round timer
                 roundTimer.cancel();
                 roundSuccess();
