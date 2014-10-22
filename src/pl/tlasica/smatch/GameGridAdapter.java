@@ -28,7 +28,8 @@ public class GameGridAdapter extends BaseAdapter {
             Color.parseColor("#2aa198"),        // cyan
             Color.parseColor("#6c71c4"),        // violet
             Color.parseColor("#859900"),        // green
-            Color.parseColor("#b58900"),        // orange
+            Color.parseColor("#eee8d5"),        // base2 / white
+            //Color.parseColor("#b58900"),        // orange
             Color.parseColor("#dc322f") };      // red
 
 
